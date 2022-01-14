@@ -1,9 +1,12 @@
-import React, { Component } from "react";
 import * as THREE from "three";
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {Sky} from "three/examples/jsm/objects/Sky";
 
-class Plane extends Component {
+class Plane {
+
+    constructor(scene, renderer){
+        this.scene = scene
+        this.renderer = renderer
+    }
 
     initSky = ()=> {
         // Add Sky
@@ -18,7 +21,7 @@ class Plane extends Component {
             mieCoefficient: 0.005,
             mieDirectionalG: 0.7,
             elevation: 2,
-            azimuth: 180,
+            azimuth: 45,
             exposure: this.renderer.toneMappingExposure
         };
 
