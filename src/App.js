@@ -1,10 +1,10 @@
 import './App.css';
-import Plane from "./components/Plane";
+import Scene from "./components/Scene";
 
 function App() {
   return (
     <div className="App">
-        <Plane/>
+        <Scene/>
     </div>
   );
 }
