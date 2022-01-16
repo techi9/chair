@@ -50,6 +50,7 @@ class Plane {
             vertices[j] = Math.pow(Math.sin(0.31*vertices[j-1] - 0.32*vertices[j+1]), 2)+
                 Math.pow(Math.cos(0.385*vertices[j-1] + 0.158*vertices[j+1]), 2);
         }
+
         // было бы круто сделать всё-таки облости с шумом, то есть чтоб были участи без шума и тп
         // for(let i = 1; i < vertices.length; i += 3){
         //     vertices[i] += Math.random()*0.2
@@ -64,11 +65,10 @@ class Plane {
             metalness: 0.2
         })
 
-        let plane = new THREE.Mesh(geometry, material)
-        plane.castShadow = true;
-        plane.receiveShadow = true;
-        this.scene.add(plane)
-        return vertices
+        this.planeMesh = new THREE.Mesh(geometry, material)
+        this.planeMesh.castShadow = true;
+        this.planeMesh.receiveShadow = true;
+        this.scene.add(this.planeMesh)
     }
 
 }

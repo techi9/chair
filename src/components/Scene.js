@@ -14,6 +14,7 @@ class Scene extends Component {
         let scene = this.scene
         let camera = this.camera
         let renderer = this.renderer
+        let chair = this.chair
 
         // Controls
         const controls = new OrbitControls(camera, renderer.domElement)
@@ -23,9 +24,11 @@ class Scene extends Component {
         controls.update()
 
         function tick() {
+            chair.animate()
             renderer.render( scene, camera );
-            window.requestAnimationFrame(tick)
             controls.update()
+            window.requestAnimationFrame(tick)
+
         }
         tick()
     }
@@ -74,11 +77,11 @@ class Scene extends Component {
 
         let plane = new Plane(this.scene, this.renderer)
         plane.initSky();
-        let vertices = plane.initPlane()
+        plane.initPlane()
         this.initLights()
 
 
-        this.chair = new Chair(vertices)
+        this.chair = new Chair(plane)
 
         this.chair.init(this.scene)
 

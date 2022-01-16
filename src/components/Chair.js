@@ -26,6 +26,7 @@ class Chair{
             leg.position.copy(pos)
             leg.castShadow = true;
             leg.receiveShadow = true;
+            this.legs.push(leg)
             scene.add(leg)
             //debug ----------------
             // let helper_pos = new Vector3(pos.x, pos.y - this.height/2, pos.z)
