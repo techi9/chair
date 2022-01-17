@@ -3,6 +3,7 @@ import {Vector3} from "three";
 
 class Chair{
     constructor(plane) {
+        this.play = true
         this.floorLegs = []
         this.material = new THREE.MeshStandardMaterial({color: "olive", bumpScale: 0.1, roughness: 0.8, castShadow: true})
         const chairSize = 1
@@ -68,14 +69,24 @@ class Chair{
         let ray = new THREE.Raycaster(curLeg, new THREE.Vector3(0, -1, 0))
         let intersections = ray.intersectObject(this.plane.planeMesh, false)
 
-        if(intersections[0].distance <= 0.07){
+        if(intersections[0].distance <= 0.07 && this.play){
             this.toDrop = false
             this.floorLegs.push(leg)
-            console.log(this.floorLegs)
+            console.log(leg.position)
             this.toRotate = true
-
+            leg.material.setValues({color: 'black'})
+            leg.material.needsUpdate = true
+            this.play = false
         }
+
     }
+
+
+    // startRotation = () => { //TODO: finish function
+    //     if (this.floorLegs.length === 1){
+    //         this._rotParams = {obj: this.floorLegs[0]}
+    //     }
+    // }
 
     animate = () => {
         if(this.toDrop){
@@ -86,13 +97,24 @@ class Chair{
             }
         }
         if(this.toRotate){
-
-            let axis = new THREE.Vector3().copy(this.legs[0].position).sub(this.legs[1].position)
-
-            Object.is(this.legs[1], this.floorLegs[0])
-
+            let curLegIndex
+            for(let i in this.legs){
+                if (Object.is(this.legs[i], this.floorLegs[0])){
+                    curLegIndex = i
+                    console.log(this.legs[i].position)
+                    break
+                }
+            }
+            let axis = new THREE.Vector3().copy(this.legs[curLegIndex].position).sub(this.legs[(curLegIndex+1) % 4].position)
+            axis.multiplyScalar(-1) // костыль номер 1
+            axis.x = axis.x * Math.cos(-Math.PI/2) + axis.z * Math.sin(-Math.PI/2)
+            axis.z = -axis.x * Math.sin(-Math.PI/2) + axis.z * Math.cos(-Math.PI/2)
             axis.normalize()
-            let point = new THREE.Vector3(this.legs[1].position.x, this.legs[1].position.y - this.height/2, this.legs[1].position.z)
+
+            let point = new THREE.Vector3(this.legs[curLegIndex].position.x, this.legs[curLegIndex].position.y - this.height/2, this.legs[curLegIndex].position.z)
+
+            const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
+            this.scene.add(arrowHelper)
 
             this.rotateAboutPoint(this.legs[0], point, axis , 0.1, false)
             this.rotateAboutPoint(this.legs[1], point, axis , 0.1, false)
