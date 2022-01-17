@@ -3,6 +3,7 @@ import {Vector3} from "three";
 
 class Chair{
     constructor(plane) {
+        this.floorLegs = []
         this.material = new THREE.MeshStandardMaterial({color: "olive", bumpScale: 0.1, roughness: 0.8, castShadow: true})
         const chairSize = 1
         this.coord = [new Vector3(0,5, 0),
@@ -68,8 +69,11 @@ class Chair{
         let intersections = ray.intersectObject(this.plane.planeMesh, false)
 
         if(intersections[0].distance <= 0.07){
-            console.log("PLANE!!")
             this.toDrop = false
+            this.floorLegs.push(leg)
+            console.log(this.floorLegs)
+            this.toRotate = true
+
         }
     }
 
@@ -82,7 +86,11 @@ class Chair{
             }
         }
         if(this.toRotate){
-            let axis = new THREE.Vector3(0, 1, 0)
+
+            let axis = new THREE.Vector3().copy(this.legs[0].position).sub(this.legs[1].position)
+
+            Object.is(this.legs[1], this.floorLegs[0])
+
             axis.normalize()
             let point = new THREE.Vector3(this.legs[1].position.x, this.legs[1].position.y - this.height/2, this.legs[1].position.z)
 
