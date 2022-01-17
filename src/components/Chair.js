@@ -86,7 +86,6 @@ class Chair{
             axis.normalize()
             let point = new THREE.Vector3(this.legs[1].position.x, this.legs[1].position.y - this.height/2, this.legs[1].position.z)
 
-
             this.rotateAboutPoint(this.legs[0], point, axis , 0.1, false)
             this.rotateAboutPoint(this.legs[1], point, axis , 0.1, false)
             this.rotateAboutPoint(this.legs[2], point, axis , 0.1, false)
@@ -98,8 +97,7 @@ class Chair{
 
 
     drop = () => {
-        // this.toDrop = true
-        this.toRotate = true
+        this.toDrop = true
     }
 }
 
