@@ -3,7 +3,7 @@ import {Vector3} from "three";
 
 class Chair{
     constructor(plane) {
-        this.play = true
+
         this.floorLegs = []
         this.airLegs = []
         this.material = new THREE.MeshStandardMaterial({color: "olive", bumpScale: 0.1, roughness: 0.8, castShadow: true})
@@ -16,6 +16,7 @@ class Chair{
         this.width = 0.2;
         this.height = 1.5;
         this.depth = 0.2;
+
         this.geometry = new THREE.BoxGeometry(
             this.width, this.height, this.depth
         )
@@ -37,7 +38,6 @@ class Chair{
 
             leg.translateX(4)
         }
-
     }
 
     // obj - your object (THREE.Object3D or derived)
@@ -116,13 +116,6 @@ class Chair{
             axis.x = axis.x * Math.cos(odd*(Math.PI/4)) + axis.z * Math.sin(odd*(Math.PI/4))
             axis.z = -axis.x * Math.sin(odd*(Math.PI/4)) + axis.z * Math.cos((Math.PI/4)*odd)
 
-            // axis.x = axis.x * Math.cos(-Math.PI/2) + axis.z * Math.sin(-Math.PI/2)
-            // axis.z = -axis.x * Math.sin(-Math.PI/2) + axis.z * Math.cos(-Math.PI/2)
-
-            // axis.x = axis.x * Math.cos((Math.PI/4)) + axis.z * Math.sin((Math.PI/4))
-            // axis.z = -axis.x * Math.sin((Math.PI/4)) + axis.z * Math.cos((Math.PI/4))
-
-
             console.log(axis)
 
             axis.normalize()
@@ -162,7 +155,10 @@ class Chair{
             for (let i = 0; i < 4; i++){
                 let pos = this.legs[i].position
                 this.legs[i].position.setY(pos.y - 0.05)
-                this.checkCollision(this.legs[i])
+                if(this.checkCollision(this.legs[i])){
+                    this.toDrop = false
+                    this.startRotation()
+                }
             }
         }
         if(this.toRotate){
@@ -174,7 +170,6 @@ class Chair{
             }
         }
     }
-
 
     drop = () => {
         this.toDrop = true
