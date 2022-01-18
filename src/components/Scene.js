@@ -54,6 +54,8 @@ class Scene extends Component {
     init = () => {
         //Scene
         this.scene = new THREE.Scene();
+        const axesHelper = new THREE.AxesHelper( 5 );
+        this.scene.add( axesHelper );
         //Size
         const sizes = {
             width: window.innerWidth,
