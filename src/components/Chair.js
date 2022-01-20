@@ -37,6 +37,8 @@ class Chair{
             scene.add(leg)
 
             leg.translateX(4)
+            leg.translateZ(0)
+
         }
     }
 
@@ -46,7 +48,6 @@ class Chair{
     // theta - radian value of rotation
     // pointIsWorld - boolean indicating the point is in world coordinates (default = false)
     rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
-
 
         pointIsWorld = (pointIsWorld === undefined)? false : pointIsWorld;
 
@@ -102,22 +103,22 @@ class Chair{
         console.log(curLegIndex)
         let odd, axis, point
         odd = (curLegIndex % 2 === 0) ? 1 : -1
-        console.log((curLegIndex + (odd === 1) ? 3 : 1)%4)
+        //console.log(odd)
         // console.log(this.legs[(curLegIndex + (odd === 1) ? 2 : 1)%4].position)
         // console.log(this.legs[curLegIndex].position)
 
         if (this.floorLegs.length === 1) {
             this.firstLegIndex = curLegIndex
             axis = new THREE.Vector3().copy(this.legs[curLegIndex].position).sub(this.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
-            console.log(this.legs[curLegIndex].position)
-            console.log(this.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
+            //console.log(this.legs[curLegIndex].position)
+            //console.log(this.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
             axis.multiplyScalar(-1) // костыль номер 1
 
-            console.log(axis)
+            //console.log(axis)
             axis.x = axis.x * Math.cos(odd*(Math.PI/4)) + axis.z * Math.sin(odd*(Math.PI/4))
             axis.z = -axis.x * Math.sin(odd*(Math.PI/4)) + axis.z * Math.cos((Math.PI/4)*odd)
 
-            console.log(axis)
+            //console.log(axis)
 
             axis.normalize()
 
@@ -144,11 +145,11 @@ class Chair{
                 angle: ang*0.02,
                 isWorld: false
             }
-            console.log('2 case')
+
         }
         else{
             this.toRotate = false
-            console.log('stop')
+            // console.log('stop')
         }
         const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
         this.scene.add(arrowHelper)
