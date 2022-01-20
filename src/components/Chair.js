@@ -107,6 +107,7 @@ class Chair{
         // console.log(this.legs[curLegIndex].position)
 
         if (this.floorLegs.length === 1) {
+            this.firstLegIndex = curLegIndex
             axis = new THREE.Vector3().copy(this.legs[curLegIndex].position).sub(this.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
             console.log(this.legs[curLegIndex].position)
             console.log(this.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
@@ -124,7 +125,7 @@ class Chair{
             this._rotationParams = {
                 point: point,
                 axis: axis,
-                angle: odd * 0.04,
+                angle: odd * 0.02,
                 isWorld: false
             }
         }
@@ -133,10 +134,14 @@ class Chair{
             axis.multiplyScalar(-1) // костыль номер 1
             axis.normalize()
             point = new THREE.Vector3(this.floorLegs[0].position.x, this.floorLegs[0].position.y - this.height/2, this.floorLegs[0].position.z)
+
+            curLegIndex = curLegIndex === 0 ? 4 : curLegIndex // this is magic TODO: maybe fix
+            let ang = this.firstLegIndex < curLegIndex ? -1 : 1
+
             this._rotationParams = {
                 point: point,
                 axis: axis,
-                angle: odd * (0.04),
+                angle: ang*0.02,
                 isWorld: false
             }
             console.log('2 case')
