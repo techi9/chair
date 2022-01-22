@@ -89,6 +89,17 @@ class Chair{
         return false
     }
 
+    distanceToPlane = (leg) =>{
+        let curLeg = new Vector3(leg.position.x , leg.position.y - this.height / 2, leg.position.z )
+        let ray = new THREE.Raycaster(curLeg, new THREE.Vector3(0, -1, 0))
+        let intersections = ray.intersectObject(this.plane.planeMesh, false)
+        if (intersections.length > 0){
+            return intersections[0].distance
+        }
+        return 0
+
+    }
+
 
     startRotation = () => {
         this.toRotate = true
