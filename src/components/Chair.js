@@ -213,6 +213,30 @@ class Chair{
     drop = () => {
         this.toDrop = true
     }
+
+    leftButton = () => {
+        for (let i = 0; i < 4; i++) {
+            this.legs[i].translateZ(0.2)
+        }
+    }
+
+    rightButton = () => {
+        for (let i = 0; i < 4; i++) {
+            this.legs[i].translateZ(-0.2)
+        }
+    }
+
+    backButton = () => {
+        for (let i = 0; i < 4; i++) {
+            this.legs[i].translateX(-0.2)
+        }
+    }
+
+    forwardButton = () => {
+        for (let i = 0; i < 4; i++) {
+            this.legs[i].translateX(0.2)
+        }
+    }
 }
 
 export default Chair

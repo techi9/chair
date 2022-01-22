@@ -84,7 +84,6 @@ class Scene extends Component {
 
 
         this.chair = new Chair(plane)
-
         this.chair.init(this.scene)
 
 //-------------
@@ -114,9 +113,14 @@ class Scene extends Component {
         return(
          <div ref={ref => (this.mount = ref)}>
 
-         <Controller onDrop = {this.chair.drop}/>
 
+         <Controller onDrop = {this.chair.drop}
+                     onLeftMoveButton = {this.chair.leftButton}
+                     onRightMoveButton = {this.chair.rightButton}
+                     onBackMoveButton = {this.chair.backButton}
+                     onForwardMoveButton = {this.chair.forwardButton}/>
         </div>
+
         );
     }
 }

@@ -1,8 +1,38 @@
 .DropButton{
     position: absolute;
-    top: 90%;
-    right: 10%;
+    top: 85%;
+    right: 11%;
     width: 10%;
     height: 5%;
+}
 
+.BackMoveButton{
+    position: absolute;
+    top: 80%;
+    right: 11%;
+    width: 10%;
+    height: 5%;
+}
+
+.ForwardMoveButton{
+    position: absolute;
+    top: 90%;
+    right: 11%;
+    width: 10%;
+    height: 5%;
+}
+
+.LeftMoveButton{
+    position: absolute;
+    top: 85%;
+    right: 21%;
+    width: 10%;
+    height: 5%;
+}
+.RightMoveButton{
+    position: absolute;
+    top: 85%;
+    right: 1%;
+    width: 10%;
+    height: 5%;
 }
