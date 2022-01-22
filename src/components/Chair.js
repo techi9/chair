@@ -36,8 +36,8 @@ class Chair{
             this.airLegs.push(leg)
             scene.add(leg)
 
-            leg.translateX(4)
-            leg.translateZ(0)
+            leg.translateX(-1.5)
+            leg.translateZ(5)
 
         }
     }
@@ -73,10 +73,16 @@ class Chair{
     }
 
     checkCollision = (leg) => {
-        let curLeg = new Vector3(leg.position.x , leg.position.y - this.height / 2, leg.position.z )
-        let ray = new THREE.Raycaster(curLeg, new THREE.Vector3(0, -1, 0))
-        let intersections = ray.intersectObject(this.plane.planeMesh, false)
-        if(intersections[0].distance <= 0.07){ // collision happened
+        //
+        // console.log("posle")
+        // if(this.airLegs.length === 2){
+        //     console.log(this.distanceToPlane(this.airLegs[0]))
+        //     console.log(this.distanceToPlane(this.airLegs[1]))
+        // }
+
+
+
+        if(this.distanceToPlane(leg) <= 0.07){ // collision happened
             this.floorLegs.push(leg)
             for(let i=0; i<this.airLegs.length; i++){
                 if(this.airLegs[i] === leg){
@@ -147,8 +153,24 @@ class Chair{
             axis.normalize()
             point = new THREE.Vector3(this.floorLegs[0].position.x, this.floorLegs[0].position.y - this.height/2, this.floorLegs[0].position.z)
 
-            curLegIndex = curLegIndex === 0 ? 4 : curLegIndex // this is magic TODO: maybe fix
-            let ang = this.firstLegIndex < curLegIndex ? -1 : 1
+            let ang
+            if(((this.firstLegIndex === 0 || this.firstLegIndex === 2) && (curLegIndex === 0 || curLegIndex === 2)) ||  // define rotation direction TODO: maybe fix
+                ((this.firstLegIndex === 1 || this.firstLegIndex === 3) && (curLegIndex === 1 || curLegIndex === 3))){
+                console.log("противоположные - ")
+                console.log(this.distanceToPlane(this.airLegs[0]))
+                console.log(this.distanceToPlane(this.airLegs[1]))
+                if(this.distanceToPlane(this.airLegs[0]) < this.distanceToPlane(this.airLegs[1])){
+                    ang = 1
+                }
+                else{
+                    ang = -1
+                }
+            }
+            else{
+                curLegIndex = curLegIndex === 0 ? 4 : curLegIndex // this is magic TODO: maybe fix 2.0
+                ang = this.firstLegIndex < curLegIndex ? -1 : 1
+                console.log(curLegIndex)
+            }
 
             this._rotationParams = {
                 point: point,
