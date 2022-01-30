@@ -112,6 +112,15 @@ class Scene extends Component {
 
     }
 
+    restartGame= () => {
+        let lastPosition = this.chair.getFirstLegPosition()
+        this.chair.deleteFromScene()
+        this.chair = new Chair(this.plane, this.scene)
+        this.chair.init(lastPosition)
+        this.forceUpdate()
+        this.startAnimation()
+    }
+
     componentDidMount() {
         this.mount.appendChild(this.renderer.domElement); // mount a scene inside of React using a ref
     }
@@ -124,6 +133,7 @@ class Scene extends Component {
 
 
          <Controller onDrop = {this.chair.drop}
+                     onDropAndShow = {this.chair.dropAndShow}
                      onLeftMoveButton = {this.chair.leftButton}
                      onRightMoveButton = {this.chair.rightButton}
                      onBackMoveButton = {this.chair.backButton}

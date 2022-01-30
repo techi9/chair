@@ -51,11 +51,6 @@ class Plane {
                 Math.pow(Math.cos(0.385*vertices[j-1] + 0.158*vertices[j+1]), 2);
         }
 
-        // было бы круто сделать всё-таки облости с шумом, то есть чтоб были участи без шума и тп
-        // for(let i = 1; i < vertices.length; i += 3){
-        //     vertices[i] += Math.random()*0.2
-        // }
-
         // Materials
         const material = new THREE.MeshStandardMaterial({
             color: 'gray',

@@ -8,6 +8,10 @@ class Controller extends Component{
         this.props.onDrop()
     }
 
+    dropAndShow = () => {
+        this.props.onDropAndShow()
+    }
+
     leftButton = () => {
         this.props.onLeftMoveButton()
     }
@@ -32,6 +36,7 @@ class Controller extends Component{
         return(
             <div>
                 <input className="DropButton" type='button' onClick={this.drop} value="DROP IT!!"/>
+                <input className="DropAndShowButton" type='button' onClick={this.dropAndShow} value="DROP AND SHOW"/>
                 <input className="LeftMoveButton" type='button' onClick={this.leftButton} value="←"/>
                 <input className="RightMoveButton" type='button' onClick={this.rightButton} value="→"/>
                 <input className="BackMoveButton" type='button' onClick={this.backButton} value="↑"/>

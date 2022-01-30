@@ -53,6 +53,7 @@ class Chair{
             legBoard.rotateY(Math.PI) // ?
 
             leg.position.copy(pos)
+
             leg.castShadow = true;
             leg.receiveShadow = true;
             this.legs.push(leg)
@@ -96,16 +97,7 @@ class Chair{
     }
 
     checkCollision = (leg) => {
-        //
-        // console.log("posle")
-        // if(this.airLegs.length === 2){
-        //     console.log(this.distanceToPlane(this.airLegs[0]))
-        //     console.log(this.distanceToPlane(this.airLegs[1]))
-        // }
-
-
-
-        if(this.distanceToPlane(leg) <= 0.07){ // collision happened
+        if(this.distanceToPlane(leg) <= 0.05){ // collision happened
             this.floorLegs.push(leg)
             for(let i=0; i<this.airLegs.length; i++){
                 if(this.airLegs[i] === leg){
@@ -142,24 +134,14 @@ class Chair{
 
         let odd, axis, point
         odd = (curLegIndex % 2 === 0) ? 1 : -1
-        //console.log(odd)
-        // console.log(this.legs[(curLegIndex + (odd === 1) ? 2 : 1)%4].position)
-        // console.log(this.legs[curLegIndex].position)
 
         if (this.floorLegs.length === 1) {
 
             this.firstLegIndex = curLegIndex
             axis = new THREE.Vector3().copy(this.legs[curLegIndex].position).sub(this.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
-            //console.log(this.legs[curLegIndex].position)
-            //console.log(this.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
             axis.multiplyScalar(-1) // костыль номер 1
-
-            //console.log(axis)
             axis.x = axis.x * Math.cos(odd*(Math.PI/4)) + axis.z * Math.sin(odd*(Math.PI/4))
             axis.z = -axis.x * Math.sin(odd*(Math.PI/4)) + axis.z * Math.cos((Math.PI/4)*odd)
-
-            //console.log(axis)
-
             axis.normalize()
             point = new THREE.Vector3(this.legs[curLegIndex].position.x, this.legs[curLegIndex].position.y - this.height/2, this.legs[curLegIndex].position.z)
 
@@ -245,12 +227,28 @@ class Chair{
     }
 
     drop = () => {
+
         this.toDrop = true
     }
 
+    dropAndShow = () => {
+        //this.toDrop = true
+        let radius   = 0.3,
+            segments = 20,
+            material = new THREE.LineBasicMaterial( { color: 0x0000ff } ),
+            geometry = new THREE.CircleGeometry( radius, segments );
+        geometry.rotateX( - Math.PI / 2 );
+        let plane = new THREE.Line( geometry, material )
+
+
+        plane.position.copy(this.legs[0].position).sub(new Vector3(0, this.height/2, 0))
+        this.scene.add( plane );
+    }
+
     leftButton = () => {
-        for (let i = 0; i < 4; i++) {
-            this.legs[i].translateZ(0.2)
+        if(this.floorLegs.length !== 0) return
+        for (let i of this.legs) {
+            i.translateZ(0.2)
         }
         for (let i of this.legBoards) {
             i.translateZ(0.2)
@@ -258,22 +256,53 @@ class Chair{
     }
 
     rightButton = () => {
-        for (let i = 0; i < 4; i++) {
-            this.legs[i].translateZ(-0.2)
+        if(this.floorLegs.length !== 0) return
+        for (let i of this.legs) {
+            i.translateZ(0.2)
+        }
+        for (let i of this.legBoards) {
+            i.translateZ(0.2)
         }
     }
 
     backButton = () => {
-        for (let i = 0; i < 4; i++) {
-            this.legs[i].translateX(-0.2)
+        if(this.floorLegs.length !== 0) return
+        for (let i of this.objects) {
+            i.translateX(-0.2)
         }
     }
 
     forwardButton = () => {
-        for (let i = 0; i < 4; i++) {
-            this.legs[i].translateX(0.2)
+        if(this.floorLegs.length !== 0) return
+        for (let i of this.objects) {
+            i.translateX(0.2)
         }
     }
+
+
+
+   deleteFromScene = () => {
+
+       this.objects.map(object3D => {
+           if (!(object3D instanceof THREE.Object3D)) return false;
+           // for better memory management and performance
+           object3D.geometry.dispose();
+           if (object3D.material instanceof Array) {
+               // for better memory management and performance
+               object3D.material.forEach(material => material.dispose());
+           } else {
+               // for better memory management and performance
+               object3D.material.dispose();
+           }
+           object3D.removeFromParent(); // the parent might be the scene or another Object3D, but it is certain to be removed this way
+       })
+
+       this.scene.children = this.scene.children.filter(obj => !(obj instanceof THREE.ArrowHelper));
+
+
+   }
+
+
 }
 
 export default Chair

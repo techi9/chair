@@ -1,3 +1,19 @@
+.RestartButton{
+    position: absolute;
+    top: 85%;
+    right: 50%;
+    width: 10%;
+    height: 5%;
+}
+
+.DropAndShowButton{
+    position: absolute;
+    top: 5%;
+    right: 85%;
+    width: 10%;
+    height: 5%;
+}
+
 .DropButton{
     position: absolute;
     top: 85%;
