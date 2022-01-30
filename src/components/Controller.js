@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import "../styles/Button.css"
 
 class Controller extends Component{
-    constructor(props) {
-        super(props);
-    }
+
 
     drop = () => {
         this.props.onDrop()
@@ -26,6 +24,10 @@ class Controller extends Component{
         this.props.onForwardMoveButton()
     }
 
+    RestartButton = () =>{
+        this.props.onRestartButton()
+    }
+
     render() {
         return(
             <div>
@@ -34,6 +36,7 @@ class Controller extends Component{
                 <input className="RightMoveButton" type='button' onClick={this.rightButton} value="→"/>
                 <input className="BackMoveButton" type='button' onClick={this.backButton} value="↑"/>
                 <input className="ForwardMoveButton" type='button' onClick={this.forwardButton} value="↓"/>
+                <input className="RestartButton" type='button' onClick={this.RestartButton} value="Restart"/>
             </div>
         )
     }

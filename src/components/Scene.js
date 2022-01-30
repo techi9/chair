@@ -11,26 +11,36 @@ class Scene extends Component {
 
         this.init();
 
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+        this.controls.enableDamping = true
+        this.controls.maxPolarAngle = 1.2
+        this.controls.minPolarAngle = 0
+        this.controls.update()
+
+        this.startAnimation()
+
+    }
+
+    startAnimation = () =>{
+
+        if(this.animationID){
+            window.cancelAnimationFrame(this.animationID)
+        }
+
         let scene = this.scene
         let camera = this.camera
         let renderer = this.renderer
         let chair = this.chair
-
-        // Controls
-        const controls = new OrbitControls(camera, renderer.domElement)
-        controls.enableDamping = true
-        controls.maxPolarAngle = 1.2
-        controls.minPolarAngle = 0
-        controls.update()
+        let controls = this.controls
 
         function tick() {
             chair.animate()
             renderer.render( scene, camera );
             controls.update()
             window.requestAnimationFrame(tick)
-
         }
-        tick()
+
+        this.animationID = window.requestAnimationFrame(tick)
     }
 
     initLights = () => {
@@ -43,7 +53,7 @@ class Scene extends Component {
         pointLight.position.x = 0
         pointLight.position.y = 2
         pointLight.position.z = 0
-        this. scene.add(pointLight)
+        this.scene.add(pointLight)
         pointLight = new THREE.PointLight(0xB97A20, 0.8)
         pointLight.position.x = 2
         pointLight.position.y = 7
@@ -54,8 +64,7 @@ class Scene extends Component {
     init = () => {
         //Scene
         this.scene = new THREE.Scene();
-        const axesHelper = new THREE.AxesHelper( 5 );
-        this.scene.add( axesHelper );
+
         //Size
         const sizes = {
             width: window.innerWidth,
@@ -78,13 +87,13 @@ class Scene extends Component {
 
 
         let plane = new Plane(this.scene, this.renderer)
+        this.plane = plane
         plane.initSky();
         plane.initPlane()
         this.initLights()
 
-
-        this.chair = new Chair(plane)
-        this.chair.init(this.scene)
+        this.chair = new Chair(plane, this.scene)
+        this.chair.init(new THREE.Vector3(0, 0, 0))
 
 //-------------
         window.addEventListener('resize', () => {
@@ -118,7 +127,9 @@ class Scene extends Component {
                      onLeftMoveButton = {this.chair.leftButton}
                      onRightMoveButton = {this.chair.rightButton}
                      onBackMoveButton = {this.chair.backButton}
-                     onForwardMoveButton = {this.chair.forwardButton}/>
+                     onForwardMoveButton = {this.chair.forwardButton}
+                     onRestartButton = {this.restartGame}/>
+
         </div>
 
         );
