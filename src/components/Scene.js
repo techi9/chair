@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-import Chair from "./Chair"
+import Physics from "./Physics"
 import Plane from "./Plane"
 import Controller from  "./Controller"
 
@@ -92,7 +92,7 @@ class Scene extends Component {
         plane.initPlane()
         this.initLights()
 
-        this.chair = new Chair(plane, this.scene)
+        this.chair = new Physics(plane, this.scene)
         this.chair.init(new THREE.Vector3(0, 0, 0))
 
 //-------------
@@ -115,7 +115,7 @@ class Scene extends Component {
     restartGame= () => {
         let lastPosition = this.chair.getFirstLegPosition()
         this.chair.deleteFromScene()
-        this.chair = new Chair(this.plane, this.scene)
+        this.chair = new Physics(this.plane, this.scene)
         this.chair.init(lastPosition)
         this.forceUpdate()
         this.startAnimation()
