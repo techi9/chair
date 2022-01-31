@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {Vector3} from "three";
+import {BufferGeometry, Float32BufferAttribute, Points, PointsMaterial, Vector3} from "three";
 
 
 class Chair{
