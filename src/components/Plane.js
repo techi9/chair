@@ -43,6 +43,7 @@ class Plane {
         // Plane
         let geometry = new THREE.PlaneBufferGeometry(15, 15, 50, 50)
         geometry.rotateX( - Math.PI / 2 );
+        let gridPlane = new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color: "#1C1C1C"}))
 
         let vertices = geometry.attributes.position.array;
 
@@ -53,17 +54,18 @@ class Plane {
 
         // Materials
         const material = new THREE.MeshStandardMaterial({
-            color: 'gray',
+            color: "#827888",
             side: THREE.DoubleSide,
-            roughness: 0.8,
-            bumpScale: 0.02,
-            metalness: 0.2
+            // roughness: 0.8,
+            // bumpScale: 0.02,
+            // metalness: 0.2
         })
 
         this.planeMesh = new THREE.Mesh(geometry, material)
         this.planeMesh.castShadow = true;
         this.planeMesh.receiveShadow = true;
         this.scene.add(this.planeMesh)
+        this.scene.add(gridPlane)
     }
 
 }

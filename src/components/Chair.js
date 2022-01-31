@@ -12,10 +12,10 @@ class Chair{
 
         this.material = []
 
-        this.material.push(new THREE.MeshStandardMaterial({color: "olive", bumpScale: 0.1, roughness: 0.8}))
+        this.material.push(new THREE.MeshStandardMaterial({color: "#627445", bumpScale: 0.1, roughness: 0.8}))
         this.material.push(new THREE.MeshStandardMaterial({color: "black", bumpScale: 0.1, roughness: 0.8}))
         this.material.push(new THREE.MeshStandardMaterial({color: "white", bumpScale: 0.1, roughness: 0.8}))
-        this.material.push(new THREE.MeshStandardMaterial({color: "blue", bumpScale: 0.1, roughness: 0.8}))
+        this.material.push(new THREE.MeshStandardMaterial({color: "gray", bumpScale: 0.1, roughness: 0.8}))
 
         const chairSize = 1.3
         this.coord = [new Vector3(0,5, 0),
@@ -36,7 +36,7 @@ class Chair{
     init = (position) => {
 
         const geometry = new THREE.ConeGeometry( 0.1, 0.4, 10 ); //TODO: decide -> decided!!!!!! no
-        const material = new THREE.MeshStandardMaterial( {color: 0xffff00} );
+        const material = new THREE.MeshStandardMaterial( {color: "#FB8D02"} );
         const cone = new THREE.Mesh( geometry, material );
         this.scene.add( cone );
 
