@@ -8,9 +8,9 @@ class Physics {
         this.plane = plane
         this.scene = scene
         this.chair = new Chair(this.scene)
+        this.global_tips_position = []
 
-        this.floorLegs = []
-        this.airLegs = this.chair.airLegs
+        this.contactNum = 0
     }
 
     init = (position) => {
@@ -18,32 +18,28 @@ class Physics {
     }
 
     getFirstLegPosition = () => {
-        return this.chair.getFirstLegPosition()
+        let coord = this.chair.getInitCoordinates()
+        return new THREE.Vector3(this.global_tips_position[0].x - coord[0].x, 0,
+            this.global_tips_position[0].z - coord[0].z)
     }
 
     rotate = () => {
-        for(let element of this.chair.objects){
-            this.chair.rotateAboutPoint(this._rotationParams.point, this._rotationParams.axis, this._rotationParams.angle)
-        }
+        this.chair.rotateAboutPoint(this._rotationParams.point, this._rotationParams.axis, this._rotationParams.angle)
     }
 
-    checkCollision = (leg) => {
-        if(this.distanceToPlane(leg) <= 0.05){ // collision happened
-            this.floorLegs.push(leg)
-            for(let i=0; i<this.airLegs.length; i++){
-                if(this.airLegs[i] === leg){
-                    this.airLegs.splice(i, 1)
-                    break
-                }
-            }
+    checkCollision = (tip, index) => {
+        if(this.distanceToPlane(index) <= 0.02){ // collision happened
+            tip.grounded = true
+            this.contactNum += 1
+            tip.contact = this.contactNum
             return true
         }
         return false
     }
 
-    distanceToPlane = (leg) =>{
-        let curLeg = new Vector3(leg.position.x , leg.position.y - this.chair.leg_height / 2, leg.position.z )
-        let ray = new THREE.Raycaster(curLeg, new THREE.Vector3(0, -1, 0))
+    distanceToPlane = (index) =>{
+        let current_tip = new Vector3(this.global_tips_position[index].x, this.global_tips_position[index].y, this.global_tips_position[index].z)
+        let ray = new THREE.Raycaster(current_tip, new THREE.Vector3(0, -1, 0))
         let intersections = ray.intersectObject(this.plane.planeMesh, false)
         if (intersections.length > 0){
             return intersections[0].distance
@@ -51,27 +47,19 @@ class Physics {
         return 0
     }
 
-    startRotation = () => {
+    startRotation = (curTipIndex) => {
         this.toRotate = true
         let opposite = false
-        let curLegIndex
-        for(let i in this.chair.legs){
-            if(JSON.stringify(this.chair.legs[i]) === JSON.stringify(this.floorLegs[this.floorLegs.length-1])){
-                curLegIndex = +i
-                break
-            }
-        }
 
-        let odd, axis, point
-        odd = (curLegIndex % 2 === 0) ? 1 : -1
+        let axis, point
 
-        if (this.floorLegs.length === 1) {
-            this.firstLegIndex = curLegIndex
-            axis = new THREE.Vector3().copy(this.chair.legs[curLegIndex].position).sub(this.chair.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
+        if (this.chair.tips[curTipIndex].contact === 1) {
+            this.firstTipIndex = curTipIndex
+            axis = this.global_tips_position[curTipIndex].clone().sub(this.global_tips_position[(+curTipIndex + 1) % 4])
             axis.multiplyScalar(-1)
             axis.applyAxisAngle(new Vector3(0,1,0), -Math.PI / 4)
             axis.normalize()
-            point = new THREE.Vector3(this.chair.legs[curLegIndex].position.x, this.chair.legs[curLegIndex].position.y - this.chair.leg_height/2, this.chair.legs[curLegIndex].position.z)
+            point = this.global_tips_position[curTipIndex].clone()
 
             this._rotationParams = {
                 point: point,
@@ -79,48 +67,57 @@ class Physics {
                 angle: -0.003
             }
         }
-        else if (this.floorLegs.length === 2){
+        else if (this.chair.tips[curTipIndex].contact === 2){
 
-            // console.log(this.firstLegIndex)
-            // console.log(curLegIndex)
+            console.log(this.firstTipIndex, curTipIndex)
 
-            if(this.firstLegIndex === 3 && curLegIndex === 0){
-                //console.log('3 --- 0')
-                axis = new THREE.Vector3().copy(this.chair.legs[curLegIndex].position).sub(this.chair.legs[this.firstLegIndex].position)
+            this.firstTipIndex = +this.firstTipIndex
+            curTipIndex = +curTipIndex
+
+            if(this.firstTipIndex === 3 && curTipIndex === 0){
+                axis = new THREE.Vector3().copy(this.global_tips_position[curTipIndex]).sub(this.global_tips_position[this.firstTipIndex])
                 axis.multiplyScalar(-1)
             }
-            else if((this.firstLegIndex > curLegIndex) || (this.firstLegIndex === 0 && curLegIndex === 3)){ // swap  2 -- 1 -> 1 -- 2, 0--3 (change)
-                //console.log('v')
-                axis = new THREE.Vector3().copy(this.chair.legs[curLegIndex].position).sub(this.chair.legs[this.firstLegIndex].position)
+            else if((this.firstTipIndex > curTipIndex) || (this.firstTipIndex === 0 && curTipIndex === 3)){ // swap  2 -- 1 -> 1 -- 2, 0--3 (change)
+                axis = new THREE.Vector3().copy(this.global_tips_position[curTipIndex]).sub(this.global_tips_position[this.firstTipIndex])
             }
             else{ // 1 -- 2 (ok)
-                //console.log("wwwwwwwwww")
-                axis = new THREE.Vector3().copy(this.chair.legs[this.firstLegIndex].position).sub(this.chair.legs[curLegIndex].position)
+                axis = new THREE.Vector3().copy(this.global_tips_position[this.firstTipIndex]).sub(this.global_tips_position[curTipIndex])
             }
             axis.normalize()
-            point = new THREE.Vector3(this.floorLegs[0].position.x, this.floorLegs[0].position.y - this.chair.leg_height/2, this.floorLegs[0].position.z)
+
+            point = this.global_tips_position[curTipIndex].clone()
 
             let ang
-            if(((this.firstLegIndex === 0 || this.firstLegIndex === 2) && (curLegIndex === 0 || curLegIndex === 2)) ||  // define rotation direction TODO: maybe fix
-                ((this.firstLegIndex === 1 || this.firstLegIndex === 3) && (curLegIndex === 1 || curLegIndex === 3))){
+
+            if((this.firstTipIndex + 2) % 4 === curTipIndex){
                 opposite = true
-                console.log('opposite')
-                if(this.distanceToPlane(this.airLegs[0]) < this.distanceToPlane(this.airLegs[1])){
+
+                let countAirTips = 0, airTip1, airTip2
+                for(let i in this.chair.tips){
+                    if(this.chair.tips[i].contact === -1 && countAirTips === 0){
+                        airTip1 = i
+                        countAirTips = 1
+                    }
+                    if(this.chair.tips[i].contact === -1 && countAirTips === 1){
+                        airTip2 = i
+                        countAirTips = 2
+                    }
+                }
+                if(this.distanceToPlane(airTip1) < this.distanceToPlane(airTip2)){
                     ang = 1
                 }
                 else{
                     ang = -1
                 }
             }
-
             ang = opposite ? ang : 1
 
             this._rotationParams = {
                 point: point,
                 axis: axis,
-                angle: ang*0.02
+                angle: ang * 0.001
             }
-
         }
         else{
             this.toRotate = false
@@ -129,53 +126,45 @@ class Physics {
         this.scene.add(arrowHelper)
     }
 
-
     animate = () => {
+        for(let i in this.chair.tips){
+            this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
+        }
         if(this.toDrop){
-            // TODO: here we need to move down not only legs, but all objects from class Chair
-            for (let i = 0; i < 4; i++){
-                let pos = this.chair.legs[i].position
-                this.chair.legs[i].position.setY(pos.y - 0.05)
-                if(this.checkCollision(this.chair.legs[i])){
+            this.chair.moveDown(0.01)
+            for(let i in this.chair.tips){
+                this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
+            }
+            for(let i in this.chair.tips){
+                if(this.checkCollision(this.chair.tips[i], i)){
                     this.toDrop = false
-                    this.startRotation()
+                    for(let i in this.chair.tips){
+                        this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
+                    }
+                    this.startRotation(i)
                 }
             }
-            // this.chair.moveDown(0.05)
-            // for(let i in this.chair.tips){
-            //     if(this.checkCollision(this.chair.tips[i])){
-            //         // --------------------
-            //         this.floorLegs.push(this.chair.legs[i])
-            //         for(let i=0; i<this.airLegs.length; i++){
-            //             if(this.airLegs[i] === this.chair.legs[i]){
-            //                 this.airLegs.splice(i, 1)
-            //                 break
-            //             }
-            //         }
-            //         // --------------------
-            //         this.toDrop = false
-            //         this.startRotation()
-            //     }
-            // }
         }
         if(this.toRotate){
             this.rotate()
-            for(let i=0; i<this.airLegs.length; i++){
-                if(this.checkCollision(this.airLegs[i])){
-                    this.startRotation()
+            for(let i in this.chair.tips){
+                this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
+            }
+            for (let i in this.chair.tips){
+                if(this.chair.tips[i].grounded === false && this.checkCollision(this.chair.tips[i], i)){
+                    for(let i in this.chair.tips){
+                        this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
+                    }
+                    this.startRotation(i)
                 }
             }
         }
         if(this.toTest){
-            // for( let i in this.chair.objects){
-            //     this.chair.rotateAboutPoint(new THREE.Vector3(0,0,0), new THREE.Vector3(0,-1,0), 0.2, false)
-            // }
-            this.chair.rotateAboutPoint2(new THREE.Vector3(0,0,0), new THREE.Vector3(0,-1,0), 0.2)
+
         }
     }
 
     drop = () => {
-
         this.toDrop = true
     }
 
@@ -193,39 +182,64 @@ class Physics {
         // this.scene.add( plane );
     }
 
+    // TODO: rotateZ should be in class chair, here we should just call the function
     leftButton = () => {
-        if(this.floorLegs.length !== 0) return
-        for (let i of this.chair.objects) {
-            i.translateZ(0.2)
+        if(this.toDrop === true || this.toRotate === true) return
+        let groundedTips = 0
+        for(let i in this.chair.tips){
+            if(this.chair.tips[i].grounded === true){
+                groundedTips += 1
+            }
         }
+        if(groundedTips !== 0) return
+        this.chair.group.translateZ(0.2)
     }
 
     rightButton = () => {
-        if(this.floorLegs.length !== 0) return
-        for (let i of this.chair.objects) {
-            i.translateZ(0.2)
+        if(this.toDrop === true || this.toRotate === true) return
+        let groundedTips = 0
+        for(let i in this.chair.tips){
+            if(this.chair.tips[i].grounded === true){
+                groundedTips += 1
+            }
         }
+        if(groundedTips !== 0) return
+        this.chair.group.translateZ(-0.2)
     }
 
     backButton = () => {
-        if(this.floorLegs.length !== 0) return
-        for (let i of this.chair.objects) {
-            i.translateX(-0.2)
+        if(this.toDrop === true || this.toRotate === true) return
+        let groundedTips = 0
+        for(let i in this.chair.tips){
+            if(this.chair.tips[i].grounded === true){
+                groundedTips += 1
+            }
         }
+        if(groundedTips !== 0) return
+        this.chair.group.translateX(-0.2)
     }
 
     forwardButton = () => {
-        if(this.floorLegs.length !== 0) return
-        for (let i of this.chair.objects) {
-            i.translateX(0.2)
+        if(this.toDrop === true || this.toRotate === true) return
+        let groundedTips = 0
+        for(let i in this.chair.tips){
+            if(this.chair.tips[i].grounded === true){
+                groundedTips += 1
+            }
         }
+        if(groundedTips !== 0) return
+        this.chair.group.translateX(0.2)
     }
-
-
 
    deleteFromScene = () => {
         this.chair.clearScene()
         this.scene.children = this.scene.children.filter(obj => !(obj instanceof THREE.ArrowHelper));
+
+        this.toDrop = false
+        this.toRotate = false
+        this.toTest = false
+        this.toTest2 = false
+        this.contactNum = 0
    }
 
 }
