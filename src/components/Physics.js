@@ -69,15 +69,14 @@ class Physics {
             this.firstLegIndex = curLegIndex
             axis = new THREE.Vector3().copy(this.chair.legs[curLegIndex].position).sub(this.chair.legs[(curLegIndex + ((odd === 1) ? 3 : 1)) % 4].position)
             axis.multiplyScalar(-1)
-            axis.x = axis.x * Math.cos(odd*(Math.PI/4)) + axis.z * Math.sin(odd*(Math.PI/4))
-            axis.z = -axis.x * Math.sin(odd*(Math.PI/4)) + axis.z * Math.cos((Math.PI/4)*odd)
+            axis.applyAxisAngle(new Vector3(0,1,0), -Math.PI / 4)
             axis.normalize()
             point = new THREE.Vector3(this.chair.legs[curLegIndex].position.x, this.chair.legs[curLegIndex].position.y - this.chair.leg_height/2, this.chair.legs[curLegIndex].position.z)
 
             this._rotationParams = {
                 point: point,
                 axis: axis,
-                angle: odd * 0.02
+                angle: -0.003
             }
         }
         else if (this.floorLegs.length === 2){
@@ -98,7 +97,6 @@ class Physics {
                 //console.log("wwwwwwwwww")
                 axis = new THREE.Vector3().copy(this.chair.legs[this.firstLegIndex].position).sub(this.chair.legs[curLegIndex].position)
             }
-
             axis.normalize()
             point = new THREE.Vector3(this.floorLegs[0].position.x, this.floorLegs[0].position.y - this.chair.leg_height/2, this.floorLegs[0].position.z)
 
@@ -193,7 +191,6 @@ class Physics {
         //
         // plane.position.copy(this.legs[0].position).sub(new Vector3(0, this.height/2, 0))
         // this.scene.add( plane );
-        this.toTest = true
     }
 
     leftButton = () => {

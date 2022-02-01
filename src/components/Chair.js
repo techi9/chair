@@ -58,7 +58,7 @@ class Chair{
         // for footboards
         const geometry = new THREE.ConeGeometry(this.footboard_radius, this.footboard_height, this.footboard_segments);
         const material = new THREE.MeshStandardMaterial({color: "#FB8D02"});
-        let dotMaterial = new PointsMaterial( { size: 0.05 } );
+        let dotMaterial = new PointsMaterial( { size: 0.05, alpha: 0 } );
 
         // create footboards and legs
         for (let i = 0; i < 4; i++) {
@@ -125,7 +125,7 @@ class Chair{
         this.group.position.sub(point); // remove the offset
         this.group.position.applyAxisAngle(axis, theta); // rotate the POSITION
         this.group.position.add(point); // re-add the offset
-        this.group.rotateOnAxis(axis, theta); // rotate the OBJECT
+        this.group.rotateOnWorldAxis(axis, theta); // rotate the OBJECT
     }
 
     moveDown = (distance) => {
