@@ -164,7 +164,7 @@ class Physics {
         }
     }
 
-    drop = () => {
+    dropButton = () => {
         this.toDrop = true
     }
 
@@ -182,7 +182,6 @@ class Physics {
         // this.scene.add( plane );
     }
 
-    // TODO: rotateZ should be in class chair, here we should just call the function
     leftButton = () => {
         if(this.toDrop === true || this.toRotate === true) return
         let groundedTips = 0
@@ -192,7 +191,7 @@ class Physics {
             }
         }
         if(groundedTips !== 0) return
-        this.chair.group.translateZ(0.2)
+        this.chair.moveLeft(0.2)
     }
 
     rightButton = () => {
@@ -204,7 +203,7 @@ class Physics {
             }
         }
         if(groundedTips !== 0) return
-        this.chair.group.translateZ(-0.2)
+        this.chair.moveRight(0.2)
     }
 
     backButton = () => {
@@ -216,7 +215,7 @@ class Physics {
             }
         }
         if(groundedTips !== 0) return
-        this.chair.group.translateX(-0.2)
+        this.chair.moveBack(0.2)
     }
 
     forwardButton = () => {
@@ -228,7 +227,7 @@ class Physics {
             }
         }
         if(groundedTips !== 0) return
-        this.chair.group.translateX(0.2)
+        this.chair.moveForward(0.2)
     }
 
    deleteFromScene = () => {
@@ -238,7 +237,6 @@ class Physics {
         this.toDrop = false
         this.toRotate = false
         this.toTest = false
-        this.toTest2 = false
         this.contactNum = 0
    }
 

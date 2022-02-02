@@ -132,7 +132,7 @@ class Scene extends Component {
          <div ref={ref => (this.mount = ref)}>
 
 
-         <Controller onDrop = {this.chair.drop}
+         <Controller onDrop = {this.chair.dropButton}
                      onDropAndShow = {this.chair.dropAndShow}
                      onLeftMoveButton = {this.chair.leftButton}
                      onRightMoveButton = {this.chair.rightButton}

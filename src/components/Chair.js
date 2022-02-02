@@ -11,13 +11,13 @@ class Chair{
 
         // footboards materials
         this.materials = []
-        this.materials.push(new THREE.MeshStandardMaterial({color: "#627445", bumpScale: 0.1, roughness: 0.8}))
-        this.materials.push(new THREE.MeshStandardMaterial({color: "black", bumpScale: 0.1, roughness: 0.8}))
-        this.materials.push(new THREE.MeshStandardMaterial({color: "white", bumpScale: 0.1, roughness: 0.8}))
-        this.materials.push(new THREE.MeshStandardMaterial({color: "gray", bumpScale: 0.1, roughness: 0.8}))
+        this.materials.push(new THREE.MeshStandardMaterial({color: "#627445", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1}))
+        this.materials.push(new THREE.MeshStandardMaterial({color: "black", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1}))
+        this.materials.push(new THREE.MeshStandardMaterial({color: "white", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1}))
+        this.materials.push(new THREE.MeshStandardMaterial({color: "gray", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1}))
 
         // base materials
-        this.base_materials = new THREE.MeshStandardMaterial({color: "white", bumpScale: 0.1, roughness: 0.8})
+        this.base_materials = new THREE.MeshStandardMaterial({color: "white", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1 })
 
         // legs coordinates
         this.chairSize = 1.3
@@ -122,6 +122,22 @@ class Chair{
 
     moveDown = (distance) => {
         this.group.position.setY(this.group.position.y - distance)
+    }
+
+    moveLeft = (distance) => {
+        this.group.translateZ(distance)
+    }
+
+    moveRight = (distance) => {
+        this.group.translateZ(-distance)
+    }
+
+    moveBack = (distance) => {
+        this.group.translateX(-distance)
+    }
+
+    moveForward = (distance) => {
+        this.group.translateX(distance)
     }
 
     clearScene = () => {
