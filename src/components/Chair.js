@@ -28,8 +28,8 @@ class Chair{
             new Vector3(chairSize, 5, 0)]
 
         // footboard size
-        this.footboard_radius = 0.1
-        this.footboard_height = 0.4
+        this.footboard_radius = 0.08
+        this.footboard_height = 0.3
         this.footboard_segments = 10
 
         // leg size
@@ -48,6 +48,9 @@ class Chair{
         this.base_geometry = new THREE.BoxGeometry(
             this.base_width, this.base_height, this.base_depth
         )
+
+        // tube param
+        this.tube = 0.03
     }
 
     init = (position) => {
@@ -61,7 +64,7 @@ class Chair{
             let leg_position = new THREE.Vector3(this.coord[i].x + position.x, this.coord[i].y, this.coord[i].z + position.z)
             let leg = new THREE.Mesh(this.leg_geometry, this.materials[i])
 
-            let prev_position = new THREE.Vector3(this.coord[i].x + position.x, this.coord[i].y - this.leg_height / 2, this.coord[i].z + position.z)
+            let prev_position = new THREE.Vector3(this.coord[i].x + position.x, this.coord[i].y - this.leg_height / 2 - this.footboard_height/2, this.coord[i].z + position.z)
             let footboard = new THREE.Mesh(geometry, material)
             footboard.position.copy(prev_position)
             footboard.rotateZ(Math.PI)
@@ -98,7 +101,7 @@ class Chair{
 
         // create base
         let base_position = new THREE.Vector3(this.tips[0].position.x + this.base_height/2 - this.leg_width/2,
-            this.tips[0].position.y + this.leg_height + this.base_depth/2 + this.footboard_height/2 ,
+            this.tips[0].position.y + this.leg_height + this.base_depth/2 + this.footboard_height,
             this.tips[0].position.z + this.base_height/2 - this.leg_width/2)
         let base = new THREE.Mesh(this.base_geometry, this.base_materials)
         base.rotateX(Math.PI / 2)
@@ -120,6 +123,22 @@ class Chair{
         this.group.rotateOnWorldAxis(axis, theta); // rotate the OBJECT
     }
 
+    torus = (pos) => {
+        let geometry = new THREE.TorusGeometry( this.footboard_height/2+0.1, this.tube, 8, 12 );
+        let material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+        let torus = new THREE.Mesh( geometry, material );
+
+
+        // let quaternion = new THREE.Quaternion()
+        // this.group.getWorldQuaternion(quaternion)
+        // pos.applyQuaternion(quaternion)
+
+        torus.rotateX(Math.PI / 2)
+        torus.position.copy(pos)
+        this.scene.add( torus );
+        this.group.add(torus)
+    }
+
     moveDown = (distance) => {
         this.group.position.setY(this.group.position.y - distance)
     }
@@ -138,6 +157,22 @@ class Chair{
 
     moveForward = (distance) => {
         this.group.translateX(distance)
+    }
+
+    transparentStateOn = () =>{
+        this.base_materials.opacity = 0.5
+        for(let i in this.materials){
+            this.materials[i].opacity = 0.5
+        }
+
+    }
+
+    transparentStateOff = () => {
+        this.base_materials.opacity = 1
+        for(let i in this.materials){
+            this.materials[i].opacity = 1
+        }
+
     }
 
     clearScene = () => {

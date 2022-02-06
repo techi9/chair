@@ -66,6 +66,11 @@ class Physics {
                 axis: axis,
                 angle: -0.003
             }
+
+            let torus_position = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
+                this.chair.tips[curTipIndex].position.z)
+            this.chair.torus(torus_position)
         }
         else if (this.chair.tips[curTipIndex].contact === 2){
 
@@ -118,9 +123,31 @@ class Physics {
                 axis: axis,
                 angle: ang * 0.001
             }
+
+            let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
+                this.chair.tips[curTipIndex].position.z)
+            let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
+                this.chair.tips[curTipIndex].position.z)
+            this.chair.torus(torus_position_1)
+            this.chair.torus(torus_position_2)
         }
         else{
             this.toRotate = false
+
+            let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
+                this.chair.tips[curTipIndex].position.z)
+            let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
+                this.chair.tips[curTipIndex].position.z)
+            let torus_position_3 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                this.chair.tips[curTipIndex].position.y + this.chair.tube + 2*this.chair.tube*4 + this.chair.footboard_height,
+                this.chair.tips[curTipIndex].position.z)
+            this.chair.torus(torus_position_1)
+            this.chair.torus(torus_position_2)
+            this.chair.torus(torus_position_3)
         }
         const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
         this.scene.add(arrowHelper)
@@ -230,6 +257,14 @@ class Physics {
         this.chair.moveForward(0.2)
     }
 
+    transparentButtonOn = () => {
+        this.chair.transparentStateOn()
+    }
+
+    transparentButtonOff = () => {
+        this.chair.transparentStateOff()
+    }
+
    deleteFromScene = () => {
         this.chair.clearScene()
         this.scene.children = this.scene.children.filter(obj => !(obj instanceof THREE.ArrowHelper));
@@ -238,6 +273,8 @@ class Physics {
         this.toRotate = false
         this.toTest = false
         this.contactNum = 0
+
+
    }
 
 }
