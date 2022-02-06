@@ -40,6 +40,23 @@ class Controller extends Component{
         this.props.onRestartButton()
     }
 
+
+    TransparentSwitch = e => {
+        this.setState({ transparentChecked: e.target.checked });
+        console.log(e.target.checked)
+        if(e.target.checked){
+            console.log(this.props.onTransparentButtonOn)
+            this.props.onTransparentButtonOn()
+            //onTransparentButtonOn
+        }
+        else{
+            this.props.onTransparentButtonOff()
+        }
+
+
+    }
+
+
     render() {
         return(
             <div>
@@ -50,6 +67,15 @@ class Controller extends Component{
                 <input className="BackMoveButton" type='button' onClick={this.backButton} value="↑"/>
                 <input className="ForwardMoveButton" type='button' onClick={this.forwardButton} value="↓"/>
                 <input className="RestartButton" type='button' onClick={this.RestartButton} value="Restart"/>
+                <div className="TransparentButton">
+                    <Toggle
+                        defaultChecked={this.state.transparentChecked}
+                        icons={false}
+                        onChange={this.TransparentSwitch} />
+                </div>
+
+
+
             </div>
         )
     }

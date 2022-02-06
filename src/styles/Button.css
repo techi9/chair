@@ -52,3 +52,11 @@
     width: 10%;
     height: 5%;
 }
+
+.TransparentButton{
+    position: absolute;
+    top: 5%;
+    right: 20%;
+    width: 10%;
+    height: 5%;
+}

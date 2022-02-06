@@ -138,8 +138,9 @@ class Scene extends Component {
                      onRightMoveButton = {this.chair.rightButton}
                      onBackMoveButton = {this.chair.backButton}
                      onForwardMoveButton = {this.chair.forwardButton}
-                     onRestartButton = {this.restartGame}/>
-
+                     onRestartButton = {this.restartGame}
+                     onTransparentButtonOn = {this.chair.transparentButtonOn}
+                     onTransparentButtonOff = {this.chair.transparentButtonOff}/>
         </div>
 
         );
