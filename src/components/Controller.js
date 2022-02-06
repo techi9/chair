@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import "../styles/Button.css"
+import "react-toggle/style.css"
+import Toggle from 'react-toggle'
+
 
 class Controller extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {transparentChecked: false};
+    }
 
 
     drop = () => {

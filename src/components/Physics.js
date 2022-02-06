@@ -105,10 +105,10 @@ class Physics {
                     }
                 }
                 if(this.distanceToPlane(airTip1) < this.distanceToPlane(airTip2)){
-                    ang = 1
+                    ang = -1
                 }
                 else{
-                    ang = -1
+                    ang = 1
                 }
             }
             ang = opposite ? ang : 1
