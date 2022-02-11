@@ -38,6 +38,7 @@ class Scene extends Component {
             renderer.render( scene, camera );
             controls.update()
             window.requestAnimationFrame(tick)
+
         }
 
         this.animationID = window.requestAnimationFrame(tick)

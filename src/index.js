@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 
 
+class Stool{
+
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../styles/Button.css"
 import "react-toggle/style.css"
 import Toggle from 'react-toggle'
-
+import RotationControl from "./RotationControl"
 
 class Controller extends Component{
 
@@ -52,14 +52,15 @@ class Controller extends Component{
         else{
             this.props.onTransparentButtonOff()
         }
-
-
     }
+
+
 
 
     render() {
         return(
             <div>
+                <RotationControl/>
                 <input className="DropButton" type='button' onClick={this.drop} value="DROP IT!!"/>
                 <input className="DropAndShowButton" type='button' onClick={this.dropAndShow} value="DROP AND SHOW"/>
                 <input className="LeftMoveButton" type='button' onClick={this.leftButton} value="←"/>
@@ -73,6 +74,8 @@ class Controller extends Component{
                         icons={false}
                         onChange={this.TransparentSwitch} />
                 </div>
+
+
 
 
 
