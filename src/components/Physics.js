@@ -11,6 +11,7 @@ class Physics {
         this.global_tips_position = []
 
         this.contactNum = 0
+        this.inDetail = true
     }
 
     init = (position) => {
@@ -67,14 +68,16 @@ class Physics {
                 angle: -0.003
             }
 
-            let torus_position = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
-                this.chair.tips[curTipIndex].position.z)
-            this.chair.torus(torus_position)
+            if(this.inDetail === true){
+                let torus_position = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.z)
+                this.chair.torus(torus_position)
+            }
         }
         else if (this.chair.tips[curTipIndex].contact === 2){
 
-            console.log(this.firstTipIndex, curTipIndex)
+            //console.log(this.firstTipIndex, curTipIndex)
 
             this.firstTipIndex = +this.firstTipIndex
             curTipIndex = +curTipIndex
@@ -124,30 +127,36 @@ class Physics {
                 angle: ang * 0.001
             }
 
-            let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
-                this.chair.tips[curTipIndex].position.z)
-            let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
-                this.chair.tips[curTipIndex].position.z)
-            this.chair.torus(torus_position_1)
-            this.chair.torus(torus_position_2)
+            if(this.inDetail === true){
+                let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.z)
+                let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.z)
+                this.chair.torus(torus_position_1)
+                this.chair.torus(torus_position_2)
+            }
         }
         else{
             this.toRotate = false
 
-            let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
-                this.chair.tips[curTipIndex].position.z)
-            let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
-                this.chair.tips[curTipIndex].position.z)
-            let torus_position_3 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                this.chair.tips[curTipIndex].position.y + this.chair.tube + 2*this.chair.tube*4 + this.chair.footboard_height,
-                this.chair.tips[curTipIndex].position.z)
-            this.chair.torus(torus_position_1)
-            this.chair.torus(torus_position_2)
-            this.chair.torus(torus_position_3)
+            if(this.inDetail === true){
+                let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.z)
+                let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.z)
+                let torus_position_3 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + 2*this.chair.tube*4 + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.z)
+                this.chair.torus(torus_position_1)
+                this.chair.torus(torus_position_2)
+                this.chair.torus(torus_position_3)
+            }
+
+            //this.chair.showDistanceToPlane(this.chair.tips[curTipIndex].position.x)
         }
         const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
         this.scene.add(arrowHelper)
@@ -192,21 +201,13 @@ class Physics {
     }
 
     dropButton = () => {
+        this.inDetail = false
         this.toDrop = true
     }
 
     dropAndShow = () => {
-        //this.toDrop = true
-        // let radius   = 0.3,
-        //     segments = 20,
-        //     material = new THREE.LineBasicMaterial( { color: 0x0000ff } ),
-        //     geometry = new THREE.CircleGeometry( radius, segments );
-        // geometry.rotateX( - Math.PI / 2 );
-        // let plane = new THREE.Line( geometry, material )
-        //
-        //
-        // plane.position.copy(this.legs[0].position).sub(new Vector3(0, this.height/2, 0))
-        // this.scene.add( plane );
+        this.inDetail = true
+        this.toDrop = true
     }
 
     leftButton = () => {

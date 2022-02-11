@@ -128,16 +128,21 @@ class Chair{
         let material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
         let torus = new THREE.Mesh( geometry, material );
 
-
-        // let quaternion = new THREE.Quaternion()
-        // this.group.getWorldQuaternion(quaternion)
-        // pos.applyQuaternion(quaternion)
-
         torus.rotateX(Math.PI / 2)
         torus.position.copy(pos)
         this.scene.add( torus );
         this.group.add(torus)
     }
+
+    // showDistanceToPlane(coordinates){
+    //     let line_position = new THREE.Vector3(coordinates.x, coordinates.y, coordinates.z)
+    //     new THREE.MeshStandardMaterial({color: "#627445", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1})
+    //     let line = new THREE.Mesh(this.leg_geometry, this.materials[i])
+    //     line.position.copy(line_position)
+    //
+    //     this.scene.add(line)
+    //     this.group.add(line)
+    // }
 
     moveDown = (distance) => {
         this.group.position.setY(this.group.position.y - distance)
@@ -177,6 +182,7 @@ class Chair{
 
     clearScene = () => {
         this.group.removeFromParent();
+        //this.group.pop()
     }
 
 }

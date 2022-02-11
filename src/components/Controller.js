@@ -43,7 +43,7 @@ class Controller extends Component{
 
     TransparentSwitch = e => {
         this.setState({ transparentChecked: e.target.checked });
-        console.log(e.target.checked)
+        //console.log(e.target.checked)
         if(e.target.checked){
             console.log(this.props.onTransparentButtonOn)
             this.props.onTransparentButtonOn()
