@@ -94,7 +94,7 @@ class Scene extends Component {
         this.initLights()
 
         this.chair = new Physics(plane, this.scene)
-        this.chair.init(new THREE.Vector3(0, 0, 0))
+        this.chair.init(new THREE.Vector3(0, 0, 0), 0)
 
 //-------------
         window.addEventListener('resize', () => {
@@ -114,12 +114,22 @@ class Scene extends Component {
     }
 
     restartGame= () => {
-        let lastPosition = this.chair.getFirstLegPosition()
+        // let lastPosition = this.chair.getFirstLegPosition()
+        let angle = this.chair.angle
+
+        let lastPosition = this.prevPosition
+
         this.chair.deleteFromScene()
         this.chair = new Physics(this.plane, this.scene)
-        this.chair.init(lastPosition)
+        this.chair.init(lastPosition, angle)
         this.forceUpdate()
         this.startAnimation()
+    }
+
+    savePosition = () =>{
+        this.prevPosition = this.chair.chair.group.position
+        console.log('Save')
+        this.chair.dropButton()
     }
 
     componentDidMount() {
@@ -141,7 +151,10 @@ class Scene extends Component {
                      onForwardMoveButton = {this.chair.forwardButton}
                      onRestartButton = {this.restartGame}
                      onTransparentButtonOn = {this.chair.transparentButtonOn}
-                     onTransparentButtonOff = {this.chair.transparentButtonOff}/>
+                     onTransparentButtonOff = {this.chair.transparentButtonOff}
+                     onRightRotationButton = {this.chair.rightRotationButton}
+                     onLeftRotationButton = {this.chair.leftRotationButton}
+                     />
         </div>
 
         );

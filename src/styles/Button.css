@@ -61,6 +61,22 @@
     height: 5%;
 }
 
+.RightRotationButton{
+    position: absolute;
+    top: 70%;
+    right: 7%;
+    width: 4%;
+    height: 5%;
+}
+
+.LeftRotationButton{
+    position: absolute;
+    top: 70%;
+    right: 17%;
+    width: 4%;
+    height: 5%;
+}
+
 .rotationButton{
     background: url(/public/wheel.png) no-repeat left top;
     background-size: 100% 100%;

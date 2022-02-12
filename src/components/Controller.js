@@ -43,24 +43,27 @@ class Controller extends Component{
 
     TransparentSwitch = e => {
         this.setState({ transparentChecked: e.target.checked });
-        //console.log(e.target.checked)
         if(e.target.checked){
-            console.log(this.props.onTransparentButtonOn)
             this.props.onTransparentButtonOn()
-            //onTransparentButtonOn
         }
         else{
             this.props.onTransparentButtonOff()
         }
     }
 
+    RightRotationButton = () =>{
+        this.props.onRightRotationButton()
+    }
 
+    LeftRotationButton = () =>{
+        this.props.onLeftRotationButton()
+    }
 
 
     render() {
         return(
             <div>
-                <RotationControl/>
+                {/*<RotationControl/>*/}
                 <input className="DropButton" type='button' onClick={this.drop} value="DROP IT!!"/>
                 <input className="DropAndShowButton" type='button' onClick={this.dropAndShow} value="DROP AND SHOW"/>
                 <input className="LeftMoveButton" type='button' onClick={this.leftButton} value="←"/>
@@ -68,16 +71,14 @@ class Controller extends Component{
                 <input className="BackMoveButton" type='button' onClick={this.backButton} value="↑"/>
                 <input className="ForwardMoveButton" type='button' onClick={this.forwardButton} value="↓"/>
                 <input className="RestartButton" type='button' onClick={this.RestartButton} value="Restart"/>
+                <input className="RightRotationButton" type='button' onClick={this.RightRotationButton} value="↷"/>
+                <input className="LeftRotationButton" type='button' onClick={this.LeftRotationButton} value="↶"/>
                 <div className="TransparentButton">
                     <Toggle
                         defaultChecked={this.state.transparentChecked}
                         icons={false}
                         onChange={this.TransparentSwitch} />
                 </div>
-
-
-
-
 
             </div>
         )
