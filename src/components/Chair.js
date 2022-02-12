@@ -54,6 +54,15 @@ class Chair{
     }
 
     init = (position) => {
+        // create base
+        let base_position = new THREE.Vector3(this.coord[0].x + position.x + this.base_height/2 - this.leg_width/2,
+            this.coord[0].y + this.leg_height/2  + this.base_depth/2,
+            this.coord[0].z + position.z + this.base_height/2 - this.leg_width/2)
+        this.base = new THREE.Mesh(this.base_geometry, this.base_materials)
+        this.base.rotateX(Math.PI / 2)
+        this.base.position.copy(base_position)
+        this.group.add(this.base)
+
         // for footboards
         const geometry = new THREE.ConeGeometry(this.footboard_radius, this.footboard_height, this.footboard_segments);
         const material = new THREE.MeshStandardMaterial({color: "#FB8D02"});
@@ -88,7 +97,7 @@ class Chair{
             dot.contact = -1
 
             //---> add objects to group
-            this.group.add( dot ); //debug
+            this.group.add(dot); //debug
             this.group.add(leg)
             this.group.add(footboard)
         }
@@ -99,17 +108,7 @@ class Chair{
             }
         }
 
-        // create base
-        let base_position = new THREE.Vector3(this.tips[0].position.x + this.base_height/2 - this.leg_width/2,
-            this.tips[0].position.y + this.leg_height + this.base_depth/2 + this.footboard_height,
-            this.tips[0].position.z + this.base_height/2 - this.leg_width/2)
-        let base = new THREE.Mesh(this.base_geometry, this.base_materials)
-        base.rotateX(Math.PI / 2)
-        base.position.copy(base_position)
-        this.group.add(base)
-
         this.scene.add(this.group)
-        // for(let i in this.tips) this.scene.add(this.tips[i])
     }
 
     getInitCoordinates = () => {
@@ -134,15 +133,19 @@ class Chair{
         this.group.add(torus)
     }
 
-    // showDistanceToPlane(coordinates){
-    //     let line_position = new THREE.Vector3(coordinates.x, coordinates.y, coordinates.z)
-    //     new THREE.MeshStandardMaterial({color: "#627445", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1})
-    //     let line = new THREE.Mesh(this.leg_geometry, this.materials[i])
-    //     line.position.copy(line_position)
-    //
-    //     this.scene.add(line)
-    //     this.group.add(line)
-    // }
+    showDistanceToPlane = (coordinates, height) => {
+        let line_geometry = new THREE.CylinderGeometry(
+            this.leg_width/4, this.leg_width/4 , height, 10, 1
+        )
+        let material = new THREE.MeshStandardMaterial({color: "red", bumpScale: 0.1, roughness: 0.8, transparent: true, opacity: 1})
+        let line = new THREE.Mesh(line_geometry, material)
+        this.distHelper = line
+        let line_position = new THREE.Vector3(coordinates.x, coordinates.y - height/2, coordinates.z)
+        line.position.copy(line_position)
+
+        this.scene.add(line)
+        //this.group.add(line)
+    }
 
     moveDown = (distance) => {
         this.group.position.setY(this.group.position.y - distance)
@@ -177,12 +180,34 @@ class Chair{
         for(let i in this.materials){
             this.materials[i].opacity = 1
         }
+    }
 
+    rightRotation = (angle) => {
+        let point = this.group.localToWorld(this.base.position.clone())
+        let axis = new Vector3(0, 1, 0)
+        angle = -angle *  Math.PI/180
+        this.group.position.sub(point); // remove the offset
+        this.group.position.applyAxisAngle(axis, angle); // rotate the POSITION
+        this.group.position.add(point); // re-add the offset
+        this.group.rotateOnAxis(axis, angle); // rotate the OBJECT
+    }
+
+    leftRotation = (angle) => {
+        let point = this.group.localToWorld(this.base.position.clone())
+        let axis = new Vector3(0, 1, 0)
+        angle = angle *  Math.PI/180
+        this.group.position.sub(point); // remove the offset
+        this.group.position.applyAxisAngle(axis, angle); // rotate the POSITION
+        this.group.position.add(point); // re-add the offset
+        this.group.rotateOnAxis(axis, angle); // rotate the OBJECT
     }
 
     clearScene = () => {
         this.group.removeFromParent();
-        //this.group.pop()
+        if(this.distHelper){
+            this.distHelper.removeFromParent();
+        }
+
     }
 
 }

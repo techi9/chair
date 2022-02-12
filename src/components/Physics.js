@@ -12,10 +12,13 @@ class Physics {
 
         this.contactNum = 0
         this.inDetail = true
+        this.angle = 0
     }
 
     init = (position) => {
         this.chair.init(position)
+        this.angle = angle
+        this.chair.leftRotation(angle)
     }
 
     getFirstLegPosition = () => {
@@ -156,7 +159,13 @@ class Physics {
                 this.chair.torus(torus_position_3)
             }
 
-            //this.chair.showDistanceToPlane(this.chair.tips[curTipIndex].position.x)
+            for(let i in this.chair.tips){
+                if(this.chair.tips[i].grounded === false){
+                    let dist = this.distanceToPlane(i)
+                    this.chair.showDistanceToPlane(this.global_tips_position[i], dist)
+                    break;
+                }
+            }
         }
         const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
         this.scene.add(arrowHelper)
@@ -210,6 +219,17 @@ class Physics {
         this.toDrop = true
     }
 
+    canMove = () =>{
+        if(this.toDrop === true || this.toRotate === true) return false
+        let groundedTips = 0
+        for(let i in this.chair.tips){
+            if(this.chair.tips[i].grounded === true){
+                groundedTips += 1
+            }
+        }
+        return groundedTips === 0;
+    }
+
     leftButton = () => {
         if(this.toDrop === true || this.toRotate === true) return
         let groundedTips = 0
@@ -223,38 +243,17 @@ class Physics {
     }
 
     rightButton = () => {
-        if(this.toDrop === true || this.toRotate === true) return
-        let groundedTips = 0
-        for(let i in this.chair.tips){
-            if(this.chair.tips[i].grounded === true){
-                groundedTips += 1
-            }
-        }
-        if(groundedTips !== 0) return
+        if(!this.canMove()) return
         this.chair.moveRight(0.2)
     }
 
     backButton = () => {
-        if(this.toDrop === true || this.toRotate === true) return
-        let groundedTips = 0
-        for(let i in this.chair.tips){
-            if(this.chair.tips[i].grounded === true){
-                groundedTips += 1
-            }
-        }
-        if(groundedTips !== 0) return
+        if(!this.canMove() ) return
         this.chair.moveBack(0.2)
     }
 
     forwardButton = () => {
-        if(this.toDrop === true || this.toRotate === true) return
-        let groundedTips = 0
-        for(let i in this.chair.tips){
-            if(this.chair.tips[i].grounded === true){
-                groundedTips += 1
-            }
-        }
-        if(groundedTips !== 0) return
+        if(!this.canMove()) return
         this.chair.moveForward(0.2)
     }
 
@@ -264,6 +263,18 @@ class Physics {
 
     transparentButtonOff = () => {
         this.chair.transparentStateOff()
+    }
+
+    rightRotationButton = () => {
+        if(!this.canMove()) return
+        this.chair.rightRotation(5)
+        this.angle -= 5
+    }
+
+    leftRotationButton = () => {
+        if(!this.canMove()) return
+        this.chair.leftRotation(5)
+        this.angle += 5
     }
 
    deleteFromScene = () => {
