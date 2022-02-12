@@ -8,7 +8,7 @@ import Controller from  "./Controller"
 class Scene extends Component {
     constructor(props) {
         super(props);
-
+        this.prevPosition = new THREE.Vector3()
         this.init();
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -143,7 +143,7 @@ class Scene extends Component {
          <div ref={ref => (this.mount = ref)}>
 
 
-         <Controller onDrop = {this.chair.dropButton}
+         <Controller onDrop = {this.savePosition}
                      onDropAndShow = {this.chair.dropAndShow}
                      onLeftMoveButton = {this.chair.leftButton}
                      onRightMoveButton = {this.chair.rightButton}

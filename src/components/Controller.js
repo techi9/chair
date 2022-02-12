@@ -12,7 +12,7 @@ class Controller extends Component{
     }
 
 
-    drop = () => {
+    drop = () =>{
         this.props.onDrop()
     }
 

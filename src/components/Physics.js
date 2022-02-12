@@ -15,16 +15,22 @@ class Physics {
         this.angle = 0
     }
 
-    init = (position) => {
+    init = (position, angle) => {
         this.chair.init(position)
         this.angle = angle
         this.chair.leftRotation(angle)
     }
 
     getFirstLegPosition = () => {
-        let coord = this.chair.getInitCoordinates()
-        return new THREE.Vector3(this.global_tips_position[0].x - coord[0].x, 0,
-            this.global_tips_position[0].z - coord[0].z)
+
+        this.chair.leftRotation(-this.angle)
+        // for(let i in this.chair.tips){
+        //     this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
+        // }
+        // let coord = this.chair.getInitCoordinates()
+        // return new THREE.Vector3(this.global_tips_position[0].x - coord[0].x, 0,
+        //     this.global_tips_position[0].z - coord[0].z)
+        return this.chair.group.position.setY(0)
     }
 
     rotate = () => {
@@ -231,14 +237,7 @@ class Physics {
     }
 
     leftButton = () => {
-        if(this.toDrop === true || this.toRotate === true) return
-        let groundedTips = 0
-        for(let i in this.chair.tips){
-            if(this.chair.tips[i].grounded === true){
-                groundedTips += 1
-            }
-        }
-        if(groundedTips !== 0) return
+        if(!this.canMove()) return
         this.chair.moveLeft(0.2)
     }
 
