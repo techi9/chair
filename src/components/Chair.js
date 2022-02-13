@@ -58,7 +58,8 @@ class Chair{
         // create base
         let base_position = new THREE.Vector3(this.coord[0].x + this.base_height/2 - this.leg_width/2,
             this.coord[0].y + this.leg_height/2  + this.base_depth/2,
-            this.coord[0].z + position.z + this.base_height/2 - this.leg_width/2)
+            this.coord[0].z + this.base_height/2 - this.leg_width/2)
+
         this.base = new THREE.Mesh(this.base_geometry, this.base_materials)
         this.base.rotateX(Math.PI / 2)
         this.base.position.copy(base_position)
@@ -104,17 +105,14 @@ class Chair{
 
         }
 
+        this.group.position.set(position.x,position.y,position.z)
+
         for(let i of this.group.children){
             if(i instanceof Points){
                 this.tips.push(i)
             }
         }
-
         this.scene.add(this.group)
-    }
-
-    getInitCoordinates = () => {
-        return this.coord
     }
 
     rotateAboutPoint = (point, axis, theta) => {
@@ -146,7 +144,6 @@ class Chair{
         line.position.copy(line_position)
 
         this.scene.add(line)
-        //this.group.add(line)
     }
 
     moveDown = (distance) => {
@@ -154,19 +151,19 @@ class Chair{
     }
 
     moveLeft = (distance) => {
-        this.group.translateZ(distance)
+        this.group.position.setZ(this.group.position.z + distance)
     }
 
     moveRight = (distance) => {
-        this.group.translateZ(-distance)
+        this.group.position.setZ(this.group.position.z - distance)
     }
 
     moveBack = (distance) => {
-        this.group.translateX(-distance)
+        this.group.position.setX(this.group.position.x - distance)
     }
 
     moveForward = (distance) => {
-        this.group.translateX(distance)
+        this.group.position.setX(this.group.position.x + distance)
     }
 
     transparentStateOn = () =>{
@@ -174,7 +171,6 @@ class Chair{
         for(let i in this.materials){
             this.materials[i].opacity = 0.5
         }
-
     }
 
     transparentStateOff = () => {
@@ -193,6 +189,7 @@ class Chair{
         angle = angle *  Math.PI/180
         this.group.rotateY(angle); // rotate the OBJECT
     }
+
 
     clearScene = () => {
         this.group.removeFromParent();

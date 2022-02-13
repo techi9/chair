@@ -114,9 +114,7 @@ class Scene extends Component {
     }
 
     restartGame= () => {
-        // let lastPosition = this.chair.getFirstLegPosition()
         let angle = this.chair.angle
-
         let lastPosition = this.prevPosition
 
         this.chair.deleteFromScene()
@@ -149,7 +147,7 @@ class Scene extends Component {
          <div ref={ref => (this.mount = ref)}>
 
 
-         <Controller onDrop = {this.savePosition}
+         <Controller onDrop = {this.savePositionAndDrop}
                      onDropAndShow = {this.chair.dropAndShow}
                      onLeftMoveButton = {this.chair.leftButton}
                      onRightMoveButton = {this.chair.rightButton}

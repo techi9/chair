@@ -13,6 +13,8 @@ class Physics {
         this.contactNum = 0
         this.inDetail = true
         this.angle = 0
+        this.dist = 0 // param 1
+        this.tiltAngle = 0
     }
 
     init = (position, angle) => {
@@ -21,17 +23,6 @@ class Physics {
         this.chair.leftRotation(angle)
     }
 
-    getFirstLegPosition = () => {
-
-        this.chair.leftRotation(-this.angle)
-        // for(let i in this.chair.tips){
-        //     this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
-        // }
-        // let coord = this.chair.getInitCoordinates()
-        // return new THREE.Vector3(this.global_tips_position[0].x - coord[0].x, 0,
-        //     this.global_tips_position[0].z - coord[0].z)
-        return this.chair.group.position.setY(0)
-    }
 
     rotate = () => {
         this.chair.rotateAboutPoint(this._rotationParams.point, this._rotationParams.axis, this._rotationParams.angle)
@@ -85,9 +76,6 @@ class Physics {
             }
         }
         else if (this.chair.tips[curTipIndex].contact === 2){
-
-            //console.log(this.firstTipIndex, curTipIndex)
-
             this.firstTipIndex = +this.firstTipIndex
             curTipIndex = +curTipIndex
 
@@ -168,19 +156,46 @@ class Physics {
             for(let i in this.chair.tips){
                 if(this.chair.tips[i].grounded === false){
                     let dist = this.distanceToPlane(i)
+                    this.dist = dist
                     this.chair.showDistanceToPlane(this.global_tips_position[i], dist)
                     break;
                 }
             }
+
+            let bottom, top
+            top = this.chair.group.localToWorld(this.chair.coord[0].clone())
+            bottom = this.global_tips_position[0].clone()
+            axis = bottom.clone().sub(top)
+            axis.normalize()
+            axis.multiplyScalar(-1)
+            point = bottom
+            const arrowHelper = new THREE.ArrowHelper( axis, point, 10, "blue" );
+            this.scene.add(arrowHelper)
+
+            let projectionPoint = top.clone().multiplyScalar(10).setY(bottom.y)
+            let axis2 = bottom.clone().sub(projectionPoint)
+            const arrowHelper2 = new THREE.ArrowHelper( axis2, point, 10, "blue" );
+            this.scene.add(arrowHelper2)
+
+            this.tiltAngle =  Math.acos((axis.x * axis2.x + axis.y * axis2.y + axis.z * axis2.z)
+            / (Math.sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z) *
+                Math.sqrt(axis2.x*axis2.x + axis2.y*axis2.y + axis2.z*axis2.z)))
+            this.tiltAngle = this.tiltAngle *180 / Math.PI
+            this.tiltAngle = Math.round(Math.abs(this.tiltAngle - 90))
+            this.dist = Math.round(this.dist*100)
+            console.log(this.dist)
+            console.log(this.tiltAngle)
         }
-        const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
-        this.scene.add(arrowHelper)
+        // const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
+        // this.scene.add(arrowHelper)
     }
 
     animate = () => {
+
         for(let i in this.chair.tips){
             this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
         }
+
         if(this.toDrop){
             this.chair.moveDown(0.01)
             for(let i in this.chair.tips){
