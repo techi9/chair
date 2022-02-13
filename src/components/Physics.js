@@ -163,9 +163,6 @@ class Physics {
             axis = bottom.clone().sub(top)
             axis.normalize()
             axis.multiplyScalar(-1)
-            point = bottom
-            // const arrowHelper = new THREE.ArrowHelper( axis, point, 10, "blue" );
-            // this.scene.add(arrowHelper)
 
             let projectionPoint = top.clone().multiplyScalar(10).setY(bottom.y)
             let axis2 = bottom.clone().sub(projectionPoint)
@@ -178,8 +175,8 @@ class Physics {
             this.tiltAngle = this.tiltAngle * 180 / Math.PI
             this.tiltAngle = Math.round(Math.abs(this.tiltAngle - 90))
             this.dist = Math.round(this.dist * 100)
-            // console.log(this.dist)
-            // console.log(this.tiltAngle)
+
+            this.kioApi.submitResult()
         }
         // const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
         // this.scene.add(arrowHelper)

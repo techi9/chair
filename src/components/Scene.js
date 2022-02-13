@@ -4,11 +4,13 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import Physics from "./Physics"
 import Plane from "./Plane"
 import Controller from  "./Controller"
+import "../styles/stool.css"
 
 class Scene extends Component {
     constructor(props) {
         super(props);
         this.prevPosition = new THREE.Vector3()
+
         this.init();
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
@@ -93,7 +95,7 @@ class Scene extends Component {
         plane.initPlane()
         this.initLights()
 
-        this.chair = new Physics(plane, this.scene)
+        this.chair = new Physics(plane, this.scene, this.props.KioApi)
         this.chair.init(new THREE.Vector3(0, 0, 0), 0)
 
 //-------------
@@ -144,7 +146,7 @@ class Scene extends Component {
 
 
         return(
-         <div ref={ref => (this.mount = ref)}>
+         <div className="stoolWrapper" ref={ref => (this.mount = ref)}>
 
 
          <Controller onDrop = {this.savePositionAndDrop}
