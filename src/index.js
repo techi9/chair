@@ -4,6 +4,8 @@ import './index.css';
 
 import Scene from "./components/Scene";
 
+// //это требуется для компиляции scss файла со стилями для задачи, без webpack эта строка не нужна
+// //     import './collatz.scss'
 
 class stool{
 

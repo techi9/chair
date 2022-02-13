@@ -4,7 +4,8 @@ import Chair from "./Chair"
 
 
 class Physics {
-    constructor(plane, scene) {
+    constructor(plane, scene, KioApi) {
+        this.kioApi = KioApi
         this.plane = plane
         this.scene = scene
         this.chair = new Chair(this.scene)
@@ -166,8 +167,6 @@ class Physics {
 
             let projectionPoint = top.clone().multiplyScalar(10).setY(bottom.y)
             let axis2 = bottom.clone().sub(projectionPoint)
-            // const arrowHelper2 = new THREE.ArrowHelper( axis2, point, 10, "blue" );
-            // this.scene.add(arrowHelper2)
 
             this.tiltAngle = Math.acos((axis.x * axis2.x + axis.y * axis2.y + axis.z * axis2.z)
                 / (Math.sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z) *
@@ -178,8 +177,6 @@ class Physics {
 
             this.kioApi.submitResult()
         }
-        // const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
-        // this.scene.add(arrowHelper)
     }
 
     animate = () => {

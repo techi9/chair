@@ -115,12 +115,31 @@ class Scene extends Component {
 
     }
 
+    getParams = () =>{
+        return {
+                    pos: this.prevPosition,
+                    angle: this.chair.angle
+               }
+    }
+
+    loadSolution = (params) =>{
+        let angle = params.angle
+        let lastPosition = params.pos
+
+        this.chair.deleteFromScene()
+        this.chair = new Physics(this.plane, this.scene, this.props.KioApi)
+        this.chair.init(lastPosition, angle)
+
+        this.forceUpdate()
+        this.startAnimation()
+    }
+
     restartGame= () => {
         let angle = this.chair.angle
         let lastPosition = this.prevPosition
 
         this.chair.deleteFromScene()
-        this.chair = new Physics(this.plane, this.scene)
+        this.chair = new Physics(this.plane, this.scene, this.props.KioApi)
         this.chair.init(lastPosition, angle)
 
         this.forceUpdate()
