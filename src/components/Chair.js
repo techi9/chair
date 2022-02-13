@@ -54,6 +54,7 @@ class Chair{
     }
 
     init = (position) => {
+
         // create base
         let base_position = new THREE.Vector3(this.coord[0].x + position.x + this.base_height/2 - this.leg_width/2,
             this.coord[0].y + this.leg_height/2  + this.base_depth/2,

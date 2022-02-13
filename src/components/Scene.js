@@ -126,9 +126,10 @@ class Scene extends Component {
         this.startAnimation()
     }
 
-    savePosition = () =>{
-        this.prevPosition = this.chair.chair.group.position
-        console.log('Save')
+    savePositionAndDrop = () =>{
+        this.prevPosition = this.chair.chair.group.localToWorld(this.chair.chair.group.position.clone())
+        console.log("saved position = " ,this.prevPosition)
+
         this.chair.dropButton()
     }
 
