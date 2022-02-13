@@ -22,10 +22,10 @@ class Chair{
         // legs coordinates
         this.chairSize = 1.3
         let chairSize = this.chairSize
-        this.coord = [new Vector3(0, 5, 0),
-            new Vector3(0, 5, chairSize),
-            new Vector3(chairSize, 5, chairSize),
-            new Vector3(chairSize, 5, 0)]
+        this.coord = [new Vector3(-chairSize/2, 5, -chairSize/2),
+            new Vector3(-chairSize/2, 5, chairSize/2),
+            new Vector3(chairSize/2, 5, chairSize/2),
+            new Vector3(chairSize/2, 5, -chairSize/2)]
 
         // footboard size
         this.footboard_radius = 0.08
@@ -56,7 +56,7 @@ class Chair{
     init = (position) => {
 
         // create base
-        let base_position = new THREE.Vector3(this.coord[0].x + position.x + this.base_height/2 - this.leg_width/2,
+        let base_position = new THREE.Vector3(this.coord[0].x + this.base_height/2 - this.leg_width/2,
             this.coord[0].y + this.leg_height/2  + this.base_depth/2,
             this.coord[0].z + position.z + this.base_height/2 - this.leg_width/2)
         this.base = new THREE.Mesh(this.base_geometry, this.base_materials)
@@ -71,10 +71,10 @@ class Chair{
 
         // create footboards and legs
         for (let i = 0; i < 4; i++) {
-            let leg_position = new THREE.Vector3(this.coord[i].x + position.x, this.coord[i].y, this.coord[i].z + position.z)
+            let leg_position = new THREE.Vector3(this.coord[i].x , this.coord[i].y, this.coord[i].z)
             let leg = new THREE.Mesh(this.leg_geometry, this.materials[i])
 
-            let prev_position = new THREE.Vector3(this.coord[i].x + position.x, this.coord[i].y - this.leg_height / 2 - this.footboard_height/2, this.coord[i].z + position.z)
+            let prev_position = new THREE.Vector3(this.coord[i].x, this.coord[i].y - this.leg_height / 2 - this.footboard_height/2, this.coord[i].z)
             let footboard = new THREE.Mesh(geometry, material)
             footboard.position.copy(prev_position)
             footboard.rotateZ(Math.PI)
@@ -101,6 +101,7 @@ class Chair{
             this.group.add(dot); //debug
             this.group.add(leg)
             this.group.add(footboard)
+
         }
 
         for(let i of this.group.children){
@@ -184,23 +185,13 @@ class Chair{
     }
 
     rightRotation = (angle) => {
-        let point = this.group.localToWorld(this.base.position.clone())
-        let axis = new Vector3(0, 1, 0)
         angle = -angle *  Math.PI/180
-        this.group.position.sub(point); // remove the offset
-        this.group.position.applyAxisAngle(axis, angle); // rotate the POSITION
-        this.group.position.add(point); // re-add the offset
-        this.group.rotateOnAxis(axis, angle); // rotate the OBJECT
+        this.group.rotateY(angle); // rotate the OBJECT
     }
 
     leftRotation = (angle) => {
-        let point = this.group.localToWorld(this.base.position.clone())
-        let axis = new Vector3(0, 1, 0)
         angle = angle *  Math.PI/180
-        this.group.position.sub(point); // remove the offset
-        this.group.position.applyAxisAngle(axis, angle); // rotate the POSITION
-        this.group.position.add(point); // re-add the offset
-        this.group.rotateOnAxis(axis, angle); // rotate the OBJECT
+        this.group.rotateY(angle); // rotate the OBJECT
     }
 
     clearScene = () => {

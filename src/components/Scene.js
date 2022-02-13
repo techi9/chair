@@ -122,14 +122,19 @@ class Scene extends Component {
         this.chair.deleteFromScene()
         this.chair = new Physics(this.plane, this.scene)
         this.chair.init(lastPosition, angle)
+
         this.forceUpdate()
         this.startAnimation()
     }
 
     savePositionAndDrop = () =>{
-        this.prevPosition = this.chair.chair.group.localToWorld(this.chair.chair.group.position.clone())
-        console.log("saved position = " ,this.prevPosition)
 
+        if(!this.chair.canMove()) return
+
+        let angle = this.chair.angle
+        this.chair.chair.rightRotation(angle)
+        this.prevPosition = this.chair.chair.group.position.clone()
+        this.chair.chair.leftRotation(angle)
         this.chair.dropButton()
     }
 
