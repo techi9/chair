@@ -29,7 +29,7 @@ class Physics {
     }
 
     checkCollision = (tip, index) => {
-        if(this.distanceToPlane(index) <= 0.02){ // collision happened
+        if (this.distanceToPlane(index) <= 0.02) { // collision happened
             tip.grounded = true
             this.contactNum += 1
             tip.contact = this.contactNum
@@ -38,11 +38,11 @@ class Physics {
         return false
     }
 
-    distanceToPlane = (index) =>{
+    distanceToPlane = (index) => {
         let current_tip = new Vector3(this.global_tips_position[index].x, this.global_tips_position[index].y, this.global_tips_position[index].z)
         let ray = new THREE.Raycaster(current_tip, new THREE.Vector3(0, -1, 0))
         let intersections = ray.intersectObject(this.plane.planeMesh, false)
-        if (intersections.length > 0){
+        if (intersections.length > 0) {
             return intersections[0].distance
         }
         return 0
@@ -58,7 +58,7 @@ class Physics {
             this.firstTipIndex = curTipIndex
             axis = this.global_tips_position[curTipIndex].clone().sub(this.global_tips_position[(+curTipIndex + 1) % 4])
             axis.multiplyScalar(-1)
-            axis.applyAxisAngle(new Vector3(0,1,0), -Math.PI / 4)
+            axis.applyAxisAngle(new Vector3(0, 1, 0), -Math.PI / 4)
             axis.normalize()
             point = this.global_tips_position[curTipIndex].clone()
 
@@ -68,25 +68,22 @@ class Physics {
                 angle: -0.003
             }
 
-            if(this.inDetail === true){
+            if (this.inDetail === true) {
                 let torus_position = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
                     this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
                     this.chair.tips[curTipIndex].position.z)
                 this.chair.torus(torus_position)
             }
-        }
-        else if (this.chair.tips[curTipIndex].contact === 2){
+        } else if (this.chair.tips[curTipIndex].contact === 2) {
             this.firstTipIndex = +this.firstTipIndex
             curTipIndex = +curTipIndex
 
-            if(this.firstTipIndex === 3 && curTipIndex === 0){
+            if (this.firstTipIndex === 3 && curTipIndex === 0) {
                 axis = new THREE.Vector3().copy(this.global_tips_position[curTipIndex]).sub(this.global_tips_position[this.firstTipIndex])
                 axis.multiplyScalar(-1)
-            }
-            else if((this.firstTipIndex > curTipIndex) || (this.firstTipIndex === 0 && curTipIndex === 3)){ // swap  2 -- 1 -> 1 -- 2, 0--3 (change)
+            } else if ((this.firstTipIndex > curTipIndex) || (this.firstTipIndex === 0 && curTipIndex === 3)) { // swap  2 -- 1 -> 1 -- 2, 0--3 (change)
                 axis = new THREE.Vector3().copy(this.global_tips_position[curTipIndex]).sub(this.global_tips_position[this.firstTipIndex])
-            }
-            else{ // 1 -- 2 (ok)
+            } else { // 1 -- 2 (ok)
                 axis = new THREE.Vector3().copy(this.global_tips_position[this.firstTipIndex]).sub(this.global_tips_position[curTipIndex])
             }
             axis.normalize()
@@ -95,24 +92,23 @@ class Physics {
 
             let ang
 
-            if((this.firstTipIndex + 2) % 4 === curTipIndex){
+            if ((this.firstTipIndex + 2) % 4 === curTipIndex) {
                 opposite = true
 
                 let countAirTips = 0, airTip1, airTip2
-                for(let i in this.chair.tips){
-                    if(this.chair.tips[i].contact === -1 && countAirTips === 0){
+                for (let i in this.chair.tips) {
+                    if (this.chair.tips[i].contact === -1 && countAirTips === 0) {
                         airTip1 = i
                         countAirTips = 1
                     }
-                    if(this.chair.tips[i].contact === -1 && countAirTips === 1){
+                    if (this.chair.tips[i].contact === -1 && countAirTips === 1) {
                         airTip2 = i
                         countAirTips = 2
                     }
                 }
-                if(this.distanceToPlane(airTip1) < this.distanceToPlane(airTip2)){
+                if (this.distanceToPlane(airTip1) < this.distanceToPlane(airTip2)) {
                     ang = -1
-                }
-                else{
+                } else {
                     ang = 1
                 }
             }
@@ -124,37 +120,36 @@ class Physics {
                 angle: ang * 0.001
             }
 
-            if(this.inDetail === true){
+            if (this.inDetail === true) {
                 let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
                     this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
                     this.chair.tips[curTipIndex].position.z)
                 let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube * 4 + this.chair.footboard_height,
                     this.chair.tips[curTipIndex].position.z)
                 this.chair.torus(torus_position_1)
                 this.chair.torus(torus_position_2)
             }
-        }
-        else{
+        } else {
             this.toRotate = false
 
-            if(this.inDetail === true){
+            if (this.inDetail === true) {
                 let torus_position_1 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
                     this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.footboard_height,
                     this.chair.tips[curTipIndex].position.z)
                 let torus_position_2 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube*4 + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + this.chair.tube * 4 + this.chair.footboard_height,
                     this.chair.tips[curTipIndex].position.z)
                 let torus_position_3 = new THREE.Vector3(this.chair.tips[curTipIndex].position.x,
-                    this.chair.tips[curTipIndex].position.y + this.chair.tube + 2*this.chair.tube*4 + this.chair.footboard_height,
+                    this.chair.tips[curTipIndex].position.y + this.chair.tube + 2 * this.chair.tube * 4 + this.chair.footboard_height,
                     this.chair.tips[curTipIndex].position.z)
                 this.chair.torus(torus_position_1)
                 this.chair.torus(torus_position_2)
                 this.chair.torus(torus_position_3)
             }
 
-            for(let i in this.chair.tips){
-                if(this.chair.tips[i].grounded === false){
+            for (let i in this.chair.tips) {
+                if (this.chair.tips[i].grounded === false) {
                     let dist = this.distanceToPlane(i)
                     this.dist = dist
                     this.chair.showDistanceToPlane(this.global_tips_position[i], dist)
@@ -169,22 +164,22 @@ class Physics {
             axis.normalize()
             axis.multiplyScalar(-1)
             point = bottom
-            const arrowHelper = new THREE.ArrowHelper( axis, point, 10, "blue" );
-            this.scene.add(arrowHelper)
+            // const arrowHelper = new THREE.ArrowHelper( axis, point, 10, "blue" );
+            // this.scene.add(arrowHelper)
 
             let projectionPoint = top.clone().multiplyScalar(10).setY(bottom.y)
             let axis2 = bottom.clone().sub(projectionPoint)
-            const arrowHelper2 = new THREE.ArrowHelper( axis2, point, 10, "blue" );
-            this.scene.add(arrowHelper2)
+            // const arrowHelper2 = new THREE.ArrowHelper( axis2, point, 10, "blue" );
+            // this.scene.add(arrowHelper2)
 
-            this.tiltAngle =  Math.acos((axis.x * axis2.x + axis.y * axis2.y + axis.z * axis2.z)
-            / (Math.sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z) *
-                Math.sqrt(axis2.x*axis2.x + axis2.y*axis2.y + axis2.z*axis2.z)))
-            this.tiltAngle = this.tiltAngle *180 / Math.PI
+            this.tiltAngle = Math.acos((axis.x * axis2.x + axis.y * axis2.y + axis.z * axis2.z)
+                / (Math.sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z) *
+                    Math.sqrt(axis2.x * axis2.x + axis2.y * axis2.y + axis2.z * axis2.z)))
+            this.tiltAngle = this.tiltAngle * 180 / Math.PI
             this.tiltAngle = Math.round(Math.abs(this.tiltAngle - 90))
-            this.dist = Math.round(this.dist*100)
-            console.log(this.dist)
-            console.log(this.tiltAngle)
+            this.dist = Math.round(this.dist * 100)
+            // console.log(this.dist)
+            // console.log(this.tiltAngle)
         }
         // const arrowHelper = new THREE.ArrowHelper( axis, point, 10, 0xff0000 );
         // this.scene.add(arrowHelper)
@@ -192,40 +187,40 @@ class Physics {
 
     animate = () => {
 
-        for(let i in this.chair.tips){
+        for (let i in this.chair.tips) {
             this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
         }
 
-        if(this.toDrop){
+        if (this.toDrop) {
             this.chair.moveDown(0.01)
-            for(let i in this.chair.tips){
+            for (let i in this.chair.tips) {
                 this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
             }
-            for(let i in this.chair.tips){
-                if(this.checkCollision(this.chair.tips[i], i)){
+            for (let i in this.chair.tips) {
+                if (this.checkCollision(this.chair.tips[i], i)) {
                     this.toDrop = false
-                    for(let i in this.chair.tips){
+                    for (let i in this.chair.tips) {
                         this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
                     }
                     this.startRotation(i)
                 }
             }
         }
-        if(this.toRotate){
+        if (this.toRotate) {
             this.rotate()
-            for(let i in this.chair.tips){
+            for (let i in this.chair.tips) {
                 this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
             }
-            for (let i in this.chair.tips){
-                if(this.chair.tips[i].grounded === false && this.checkCollision(this.chair.tips[i], i)){
-                    for(let i in this.chair.tips){
+            for (let i in this.chair.tips) {
+                if (this.chair.tips[i].grounded === false && this.checkCollision(this.chair.tips[i], i)) {
+                    for (let i in this.chair.tips) {
                         this.global_tips_position[i] = this.chair.group.localToWorld(this.chair.tips[i].position.clone())
                     }
                     this.startRotation(i)
                 }
             }
         }
-        if(this.toTest){
+        if (this.toTest) {
 
         }
     }
@@ -240,11 +235,11 @@ class Physics {
         this.toDrop = true
     }
 
-    canMove = () =>{
-        if(this.toDrop === true || this.toRotate === true) return false
+    canMove = () => {
+        if (this.toDrop === true || this.toRotate === true) return false
         let groundedTips = 0
-        for(let i in this.chair.tips){
-            if(this.chair.tips[i].grounded === true){
+        for (let i in this.chair.tips) {
+            if (this.chair.tips[i].grounded === true) {
                 groundedTips += 1
             }
         }
@@ -252,22 +247,22 @@ class Physics {
     }
 
     leftButton = () => {
-        if(!this.canMove()) return
+        if (!this.canMove()) return
         this.chair.moveLeft(0.2)
     }
 
     rightButton = () => {
-        if(!this.canMove()) return
+        if (!this.canMove()) return
         this.chair.moveRight(0.2)
     }
 
     backButton = () => {
-        if(!this.canMove() ) return
+        if (!this.canMove()) return
         this.chair.moveBack(0.2)
     }
 
     forwardButton = () => {
-        if(!this.canMove()) return
+        if (!this.canMove()) return
         this.chair.moveForward(0.2)
     }
 
@@ -280,18 +275,18 @@ class Physics {
     }
 
     rightRotationButton = () => {
-        if(!this.canMove()) return
+        if (!this.canMove()) return
         this.chair.rightRotation(5)
         this.angle -= 5
     }
 
     leftRotationButton = () => {
-        if(!this.canMove()) return
+        if (!this.canMove()) return
         this.chair.leftRotation(5)
         this.angle += 5
     }
 
-   deleteFromScene = () => {
+    deleteFromScene = () => {
         this.chair.clearScene()
         this.scene.children = this.scene.children.filter(obj => !(obj instanceof THREE.ArrowHelper));
 
@@ -301,7 +296,7 @@ class Physics {
         this.contactNum = 0
 
 
-   }
+    }
 
 }
 
